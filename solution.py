@@ -13,7 +13,8 @@ class Solution():
 
 	def detected(self, data):
 		M = data.get_matrix_sens()
-		return all(M*self.sensors >= 1)
+		return all((M*self.sensors)[1:] >= 1)
+		# we want all the targets to be detected except the hole
 
 
 	def related(self, data):
@@ -28,7 +29,9 @@ class Solution():
 				reached = union(reached,new)
 				v = v.union(new)
 			next_vertex = v
-		return len(reached)== self.value
+		return len(reached) == self.value + (1 - self.sensors[0])
+		# we want to reach all the sensors from the hole, but we don't want
+		# to count the hole twice if it's a sensor
 
 
 	def eligible(self, data):
