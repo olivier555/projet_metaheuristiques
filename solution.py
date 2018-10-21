@@ -53,3 +53,6 @@ class Solution():
 		if self.sensors[i]:
 			self.sensors[i] = False
 			self.value -= 1
+
+	def is_captor(self,i):
+		return self.sensors[i]
