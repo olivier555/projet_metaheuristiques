@@ -1,3 +1,5 @@
+import numpy as np
+
 class Solution():
 	def __init__(self, n, sensors = 0):
 		if sensors == 0:
@@ -13,13 +15,13 @@ class Solution():
 
 	def detected(self, data):
 		M = data.get_matrix_sens()
-		return all((M*self.sensors)[1:] >= 1)
+		return (np.matmul(M, self.sensors)[1:] >= 1).all()
 		# we want all the targets to be detected except the hole
 
 
 	def related(self, data):
 		reached = {0}
-		next_vertex = set{data.neighbours(0)}
+		next_vertex = set({data.neighbours(0)})
 		index_sensors = np.where(sensors)
 		while len(next_vertex) > 0 and len(reached) < self.value:
 			v = {}

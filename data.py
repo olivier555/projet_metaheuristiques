@@ -8,16 +8,13 @@ import numpy as np
 
 class Data:
 
-    def __init__(self, file_name, r_com, r_sens):
-        self.points = self.read_file(file_name)
-        self.r_com = r_com
-        self.r_sens = r_sens
-        self.set_matrix_com(self.create_matrix_radius(r_com))
-        self.set_matrix_sens(self.create_matrix_radius(r_sens))
-        
-
-    def __init__(self, nb_rows, nb_columns, r_com, r_sens):
-        self.points = self.create_grid(nb_rows, nb_columns)
+    def __init__(self, r_com, r_sens, nb_rows = None, nb_columns = None, file_name = None):
+        if file_name is not None:
+            self.points = self.read_file(file_name)
+        elif nb_rows is not None and nb_columns is not None:
+            self.points = self.create_grid(nb_rows, nb_columns)
+        else:
+            raise ValueError('Not enough arguments to define the problem')
         self.r_com = r_com
         self.r_sens = r_sens
         self.set_matrix_com(self.create_matrix_radius(r_com))
