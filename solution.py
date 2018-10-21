@@ -6,7 +6,7 @@ import numpy as np
 
 class Solution():
 	def __init__(self, n, sensors = None):
-		if isinstance(sensors ,None):
+		if sensors is None:
 			sensors = np.zeros(n,dtype = 'bool')
 		else:
 			sensors = np.array(sensors,'bool')
@@ -58,3 +58,8 @@ class Solution():
 
 	def get_sensors(self):
 		return self.sensors
+
+
+if __name__ == '__main__':
+	s = Solution(5,[True, True, True, True ,True])
+	s = Solution(5)
