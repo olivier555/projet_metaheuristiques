@@ -63,10 +63,10 @@ class Data:
         return matrix
 
     def get_neighbours_com(self, index):
-        return self.g_com.get_neighbours()
+        return self.g_com.get_neighbours(index)
 
     def get_neighbours_sens(self, index):
-        return self.g_sens.get_neighbours()
+        return self.g_sens.get_neighbours(index)
 
     def set_matrix_com(self, matrix):
         self.matrix_com = matrix
