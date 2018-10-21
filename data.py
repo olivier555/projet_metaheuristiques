@@ -16,6 +16,7 @@ class Data:
             self.points = self.create_grid(nb_rows, nb_columns)
         else:
             raise ValueError('Not enough arguments to define the problem')
+        self.n = len(self.points)
         self.r_com = r_com
         self.r_sens = r_sens
         self.create_matrix_distance()
@@ -23,6 +24,7 @@ class Data:
         self.set_graph_com()
         self.set_matrix_sens(self.create_matrix_radius(r_sens))
         self.set_graph_sens()
+
 
     def create_grid(self, nb_rows, nb_columns):
         points = []

@@ -11,6 +11,7 @@ class Graph():
 	def __init__(self,n,adjacency, oriented, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
 		self.n = n
 		if triangular_sup :
+			assert isinstance(adjacency, np.ndarray), "adjacency is not an array"
 			adjacency = adjacency + adjacency.T
 			assert not(oriented)
 		self.oriented = oriented
@@ -51,14 +52,14 @@ class Graph():
 				self.edges_value_d = edges_value
 			if self.edges_value_matrix :
 				self.edges_value_m = np.zeros((self.n,self.n))
-				for (i,j), value in self.edges_value_d.iteritems():
+				for (i,j), value in self.edges_value_d.items():
 					self.edges_value_m[i][j] = value
 			
 			if not(adjacency_already_built):
-				for (i,j), value in self.edges_value_d.iteritems():
+				for (i,j), value in self.edges_value_d.items():
 					self.adjacency[i][j] = True
 			else:
-				print "warning, adjacency matrix and dictionnary of edges values given separately"	
+				print("warning, adjacency matrix and dictionnary of edges values given separately")
 		else:
 			assert isinstance(edges_value,np.ndarray), "type of edges_value not known"
 			assert edges_value.shape == (self.n,self.n), "edges_value matrix shape doesn't fit n"
@@ -118,34 +119,37 @@ class Graph():
 					reached = reached.union(set([i]))
 					visit_left = True
 					break
-
 		return (True,[list(left),list(right)])
+
+	def get_size(self):
+		return self.n
 
 
 
 if __name__ == '__main__':
-	g = Graph(5,None,False,{(1,2):3,(2,1):3})
-	
+	g = Graph(5,None,oriented = False, triangular_sup = False,edges_value = {(1,2):3,(2,1):3})
+	print(g.get_neighbours(3))
 	try :
-		g = Graph(5,None,False,{(1,2):3,(2,1):1})
+		g = Graph(5,None,oriented = False,triangular_sup = False,edges_value = {(1,2):3,(2,1):1})
 	except AssertionError as e: 
-		print e
+		print(e)
 
 	g = Graph(5,np.zeros((5,5)), True)
 	try :
 		g = Graph(5,np.zeros((5,6)), True)
 	except AssertionError as e:
-		print e
+		print(e)
 
 	a = np.zeros((5,5))
 	a[4][1] = 1
 	a[1][4] = 1
 	g = Graph(5,a, False)
-	print "test biparti", g.is_bipartite()
+	print("test biparti", g.is_bipartite())
 
 	a[1][4] = 0
 	
 	try :
 		g = Graph(5,a, False)
 	except AssertionError as e:
-		print e
+		print(e)
+

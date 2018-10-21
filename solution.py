@@ -10,7 +10,7 @@ class Solution():
 			sensors = np.zeros(n,dtype = 'bool')
 		else:
 			sensors = np.array(sensors,'bool')
-			assert sensors.size == n, "size of sensors must be equal to n"
+			assert sensors.size == n, "size of sensors must be equal to n %s"%n
 		self.sensors = sensors
 		self.value = self.compute_value()
 
