@@ -56,5 +56,5 @@ class Solution():
 	def is_sensor(self,i):
 		return self.sensors[i]
 
-	def get_sensor(self):
+	def get_sensors(self):
 		return self.sensors
