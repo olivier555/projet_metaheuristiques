@@ -1,10 +1,17 @@
+"""
+This class describes a solution (wihtout considering the data)
+"""
+
+
+import numpy as np
+
 class Solution():
 	def __init__(self, n, sensors = 0):
 		if sensors == 0:
 			sensors = np.zeros(n,dtype = 'bool')
 		else:
 			sensors = np.array(sensors,'bool')
-			assert(sensors.size == n, "size of sensors must be equal to n")
+			assert sensors.size == n, "size of sensors must be equal to n"
 		self.sensors = sensors
 		self.value = self.compute_value()
 
@@ -19,10 +26,10 @@ class Solution():
 
 	def related(self, data):
 		reached = {0}
-		next_vertex = set{data.neighbours(0)}
+		next_vertex = set(data.neighbours(0))
 		index_sensors = np.where(sensors)
 		while len(next_vertex) > 0 and len(reached) < self.value:
-			v = {}
+			v = set([])
 			for i in next_vertex :
 				new = intersection(set(data.neighbours_sens(i)),index_sensors)
 				new = new - reached
