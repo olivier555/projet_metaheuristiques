@@ -5,8 +5,8 @@ This class describes a solution (wihtout considering the data)
 import numpy as np
 
 class Solution():
-	def __init__(self, n, sensors = 0):
-		if sensors == 0:
+	def __init__(self, n, sensors = None):
+		if isinstance(sensors ,None):
 			sensors = np.zeros(n,dtype = 'bool')
 		else:
 			sensors = np.array(sensors,'bool')
