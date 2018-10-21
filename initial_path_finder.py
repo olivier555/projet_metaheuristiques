@@ -19,6 +19,7 @@ class PathFinder:
         self.detected = set([0])
         self.solution = Solution(len(self.data.points))
         self.add_neighbours(0)
+        print(self.neighbours)
         while len(self.neighbours) != 0:
             sum_norm = sum([len(n["neighbours_sens"]) for n in self.neighbours])
             neighbour = np.random.choice(self.neighbours,
@@ -31,11 +32,10 @@ class PathFinder:
 
     def add_neighbours(self, target_id):
         for n in self.data.get_neighbours_com(target_id):
-            if n not in self.detected:
-                set_sens = set(self.data.get_neighbours_sens(n) + [n])
-                set_reduced = set_sens.difference(self.detected)
-                if len(set_reduced) != 0:
-                    self.neighbours.append({"id": n, "neighbours_sens": set_reduced})
+            set_sens = set(self.data.get_neighbours_sens(n) + [n])
+            set_reduced = set_sens.difference(self.detected)
+            if len(set_reduced) != 0:
+                self.neighbours.append({"id": n, "neighbours_sens": set_reduced})
 
     def update_neighbours(self, neighbour_added):
         self.detected = self.detected.union(neighbour_added["neighbours_sens"])

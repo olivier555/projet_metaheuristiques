@@ -5,6 +5,7 @@ the position of the targets and the neighbourhood matrix
 """
 
 import numpy as np
+from graph import *
 
 class Data:
 
@@ -17,8 +18,11 @@ class Data:
             raise ValueError('Not enough arguments to define the problem')
         self.r_com = r_com
         self.r_sens = r_sens
+        self.create_matrix_distance()
         self.set_matrix_com(self.create_matrix_radius(r_com))
+        self.set_graph_com()
         self.set_matrix_sens(self.create_matrix_radius(r_sens))
+        self.set_graph_sens()
 
     def create_grid(self, nb_rows, nb_columns):
         points = []
@@ -41,25 +45,26 @@ class Data:
                              float(new_line[2][0])])
         return points
 
+    def create_matrix_distance(self):
+        self.distances_2 = np.zeros((self.n, self.n), dtype = 'bool')
+        for i in range(self.n):
+            for j in range(i+1,self.n):
+                distance_x = (self.points[i][0] - self.points[j][0]) ** 2
+                distance_y = (self.points[i][1] - self.points[j][1]) ** 2
+                self.distances_2[i][j] = distance_x+ distance_y
+
     def create_matrix_radius(self, radius):
-        matrix = np.zeros((len(self.points), len(self.points)), dtype = 'bool')
-        for i in range(len(self.points)):
-            matrix[i][i] = 1
-            for j in range(i + 1, len(self.points)):
-                distance_x = (self.points[i][1] - self.points[j][1]) ** 2
-                distance_y = (self.points[i][2] - self.points[j][2]) ** 2
-                if distance_x + distance_y <= radius ** 2:
-                    matrix[i][j] = 1
-                    matrix[j][i] = 1
+        matrix = np.zeros((self.n, self.n), dtype = 'bool')
+        r = radius**2
+        for i in range(self.n):
+            matrix[i][i+1:] = (self.distances_2[i][i+1:] <= r )
         return matrix
 
     def get_neighbours_com(self, index):
-        return [j for j in range(len(self.points)) if self.matrix_com[index][j]
-                                                      and j != index]
+        return self.g_com.get_neighbours()
 
     def get_neighbours_sens(self, index):
-        return [j for j in range(len(self.points)) if self.matrix_sens[index][j]
-                                                      and j != index]
+        return self.g_sens.get_neighbours()
 
     def set_matrix_com(self, matrix):
         self.matrix_com = matrix
@@ -72,3 +77,12 @@ class Data:
 
     def get_matrix_sens(self):
         return self.matrix_sens
+
+    def get_size(self):
+        return self.n
+
+    def set_graph_sens(self):
+        self.g_sens = Graph(self.n, self.get_matrix_sens(), oriented = False, triangular_sup = True)
+
+    def set_graph_com(self):
+        self.g_com = Graph(self.n, self.get_matrix_com(), oriented = False, triangular_sup = True)    
