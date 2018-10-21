@@ -2,7 +2,6 @@
 This class describes a solution (wihtout considering the data)
 """
 
-
 import numpy as np
 
 class Solution():
@@ -20,7 +19,7 @@ class Solution():
 
 	def detected(self, data):
 		M = data.get_matrix_sens()
-		return all((M*self.sensors)[1:] >= 1)
+		return (np.matmul(M, self.sensors)[1:] >= 1).all()
 		# we want all the targets to be detected except the hole
 
 
