@@ -11,6 +11,7 @@ class Graph():
 	def __init__(self,n,adjacency, oriented, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
 		self.n = n
 		if triangular_sup :
+			assert np.allclose(adjacency, np.triu(adjacency)), "matrix of adjacency is not upper triangular" 
 			assert isinstance(adjacency, np.ndarray), "adjacency is not an array"
 			adjacency = adjacency + adjacency.T
 			assert not(oriented)

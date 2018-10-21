@@ -48,11 +48,11 @@ class Data:
         return points
 
     def create_matrix_distance(self):
-        self.distances_2 = np.zeros((self.n, self.n), dtype = 'bool')
+        self.distances_2 = np.zeros((self.n, self.n))
         for i in range(self.n):
             for j in range(i+1,self.n):
-                distance_x = (self.points[i][0] - self.points[j][0]) ** 2
-                distance_y = (self.points[i][1] - self.points[j][1]) ** 2
+                distance_x = (self.points[i][1] - self.points[j][1]) ** 2
+                distance_y = (self.points[i][2] - self.points[j][2]) ** 2
                 self.distances_2[i][j] = distance_x+ distance_y
 
     def create_matrix_radius(self, radius):
