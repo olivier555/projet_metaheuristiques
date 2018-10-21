@@ -56,8 +56,8 @@ class Solution():
 	def is_sensor(self,i):
 		return self.sensors[i]
 
-	def get_sensors(self):
-		return self.sensors
+	def get_index_sensors(self):
+		return list(np.where(self.sensors)[0])
 
 
 if __name__ == '__main__':
