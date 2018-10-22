@@ -170,8 +170,7 @@ class Graph():
 			v = list_value_edges[k]
 			edges_value[i][j] = v
 			edges_value[j][i] = v
-		G = Graph(self.n,adj,oriented = False, edges_value = edges_value)
-		return (G, sum(sum(edges_value))/2)
+		return (adj, edges_value)
 
 
 
