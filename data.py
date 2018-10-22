@@ -50,16 +50,17 @@ class Data:
     def create_matrix_distance(self):
         self.distances_2 = np.zeros((self.n, self.n))
         for i in range(self.n):
+            self.distances_2[i][i] = 0.0
             for j in range(i+1,self.n):
                 distance_x = (self.points[i][1] - self.points[j][1]) ** 2
                 distance_y = (self.points[i][2] - self.points[j][2]) ** 2
-                self.distances_2[i][j] = distance_x+ distance_y
+                self.distances_2[i][j] = distance_x + distance_y
+                self.distances_2[j][i] = distance_x + distance_y
 
     def create_matrix_radius(self, radius):
         matrix = np.zeros((self.n, self.n), dtype = 'bool')
-        r = radius**2
-        for i in range(self.n):
-            matrix[i][i+1:] = (self.distances_2[i][i+1:] <= r )
+        r = radius ** 2
+        matrix = self.distances_2 <= r
         return matrix
 
     def get_neighbours_com(self, index):

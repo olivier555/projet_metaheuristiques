@@ -19,7 +19,6 @@ class PathFinder:
         self.detected = set([0])
         self.solution = Solution(len(self.data.points))
         self.add_neighbours(0)
-        print(self.neighbours)
         while len(self.neighbours) != 0:
             sum_norm = sum([len(n["neighbours_sens"]) for n in self.neighbours])
             neighbour = np.random.choice(self.neighbours,

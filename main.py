@@ -10,8 +10,8 @@ from data import Data
 from visualization import Visualizator
 from lower_bound_founder import LowerBoundFounder
 
-#data = Data(r_com = 2, r_sens = 2, file_name = "Instances/captANOR225_9_20.dat")
-data = Data(r_com = 2, r_sens = 1, nb_rows = 10, nb_columns = 10)
+data = Data(r_com = 2, r_sens = 2, file_name = "Instances/captANOR225_9_20.dat")
+#data = Data(r_com = 2, r_sens = 1, nb_rows = 10, nb_columns = 10)
 print("Founding solution ...")
 path_finder = PathFinder(data)
 solution = path_finder.create_path()
