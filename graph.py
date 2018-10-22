@@ -8,8 +8,11 @@ class Graph():
 	# if edges_values != None we iniate the graph with values on the edges.
 	# edges_values_dic and edges_values_matrix are boolean to kwon if we save the values
 	# in a matrix or in a dictionnary
-	def __init__(self,n,adjacency, oriented, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
+	def __init__(self,n,adjacency = None, oriented = None, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
 		self.n = n
+
+		assert (adjacency is not None) or (edges_value is not None)
+
 		if triangular_sup :
 			assert np.allclose(adjacency, np.triu(adjacency)), "matrix of adjacency is not upper triangular" 
 			assert isinstance(adjacency, np.ndarray), "adjacency is not an array"
