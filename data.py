@@ -85,7 +85,7 @@ class Data:
         return self.n
 
     def set_graph_sens(self):
-        self.g_sens = Graph(self.n, self.get_matrix_sens(), oriented = False, triangular_sup = True)
+        self.g_sens = Graph(self.n, self.get_matrix_sens(), oriented = False, triangular_sup = False)
 
     def set_graph_com(self):
-        self.g_com = Graph(self.n, self.get_matrix_com(), oriented = False, triangular_sup = True)    
+        self.g_com = Graph(self.n, self.get_matrix_com(), oriented = False, triangular_sup = False)    
