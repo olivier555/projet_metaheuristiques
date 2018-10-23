@@ -81,6 +81,9 @@ class Data:
     def get_matrix_sens(self):
         return self.matrix_sens
 
+    def get_matrix_distance(self):
+        return self.distances_2
+
     def get_size(self):
         return self.n
 

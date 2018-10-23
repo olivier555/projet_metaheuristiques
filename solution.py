@@ -19,7 +19,7 @@ class Solution():
 
     def detected(self, data):
         M = data.get_matrix_sens()
-        return (np.matmul(M, self.sensors)[1:] >= 1).all()
+        return (np.matmul(M, self.sensors)[1:]).all()
         # we want all the targets to be detected except the hole
 
 
