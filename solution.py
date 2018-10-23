@@ -213,7 +213,7 @@ class Solution():
 					for k in M_list[ind_i][ind_j]:
 						self.add_sensor(k)
 		assert self.related(data)
-				
+
 
 
 if __name__ == '__main__':
