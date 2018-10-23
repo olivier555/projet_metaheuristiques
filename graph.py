@@ -8,7 +8,7 @@ class Graph():
 	# if edges_values != None we iniate the graph with values on the edges.
 	# edges_values_dic and edges_values_matrix are boolean to kwon if we save the values
 	# in a matrix or in a dictionnary
-	def __init__(self,n,adjacency = None, oriented = None, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
+	def __init__(self,n,adjacency = None, oriented = False, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
 		self.n = n
 
 		assert (adjacency is not None) or (edges_value is not None)
@@ -19,7 +19,7 @@ class Graph():
 			adjacency = adjacency + adjacency.T
 			assert not(oriented)
 		self.oriented = oriented
-		if edges_value == None:
+		if edges_value is None:
 			self.value = False # there are no values (or capacities) on the edges
 			self.adjacency = (adjacency != 0)
 		else:
@@ -47,7 +47,6 @@ class Graph():
 			adjacency_already_built = True
 		else:
 			adjacency_already_built = False
-			self.adjacency = np.zeros((self.n,self.n), dtype = 'bool')
 		#booleans to know if we want to save the matrix or the dictionnary
 		assert self.edges_value_matrix or self.edges_value_dic, "we need to save the value on the edges"
 		
@@ -60,21 +59,24 @@ class Graph():
 					self.edges_value_m[i][j] = value
 			
 			if not(adjacency_already_built):
+				self.adjacency = np.zeros((self.n,self.n), dtype = 'bool')
 				for (i,j), value in self.edges_value_d.items():
 					self.adjacency[i][j] = True
 			else:
 				print("warning, adjacency matrix and dictionnary of edges values given separately")
 		else:
+			if not(adjacency_already_built):
+				self.adjacency = np.ones((self.n,self.n),dtype = 'bool')
 			assert isinstance(edges_value,np.ndarray), "type of edges_value not known"
 			assert edges_value.shape == (self.n,self.n), "edges_value matrix shape doesn't fit n"
-			assert isinstance(adjacency,np.ndarray) and adjacency.shape == (self.n,self.n), "adjacency is not a square matrix of size n"
+			assert isinstance(self.adjacency,np.ndarray) and self.adjacency.shape == (self.n,self.n), "adjacency is not a square matrix of size n"
 			if self.edges_value_matrix :
 				self.edges_value_m = edges_value
 			if self.edges_value_dic :
 				self.edges_value_d = {}
 				for i in range(self.n):
 					for j in range(i+1,self.n):
-						if adjacency[i][j]:
+						if self.adjacency[i][j]:
 							self.edges_value_d[(i,j)] = edges_value[i][j]
 							self.edges_value_d[(j,i)] = edges_value[j][i]
 		if self.edges_value_matrix:
@@ -140,31 +142,51 @@ class Graph():
 		# half_edges_value = np.triu(self.edges_value_m)
 		# half_edges_value = half_edges_value.reshape(self.n**2)
 		sorted_index = np.argsort(list_value_edges)
-		print(sorted_index)
-		print(list_value_edges[sorted_index[0]])
+		# print(sorted_index)
+		# print(list_value_edges[sorted_index[0]])
+
+		# print(list_index_edges[1])
+
+		# test = True
+		# for i in range(100):
+		# 	print(list_value_edges[sorted_index[i]])
 		compt = 0
 		ind = 0
-		new_neighbours = {}
-		for i in range(self.n):
-			new_neighbours[i] = set()
+		# new_neighbours = {}
+		# for i in range(self.n):
+		# 	new_neighbours[i] = set()
 		ind_edges = []
+		connex_set = {}
+		connex_set_index = {}
+		for i in range(self.n):
+			connex_set[i] = {i}
+			connex_set_index[i] = i
 		while compt < self.n-1:
 			(j,k) = list_index_edges[sorted_index[ind]]
-			if j not in new_neighbours[k]:
-				ind_edges.append(sorted_index[ind])
-				s = new_neighbours[j].union(new_neighbours[k])
-				new_neighbours[j] = s.copy()
-				new_neighbours[j].add(k)
-				new_neighbours[k] = s.copy()
-				new_neighbours[k].add(j)
+			ind_set_j = connex_set_index[j]
+			ind_set_k = connex_set_index[k]
+			if (j not in connex_set[ind_set_k]):
+				ind_new_set = min(ind_set_j,ind_set_k)
+				for l in connex_set[ind_set_j]:
+					connex_set_index[l] = ind_new_set
+				for l in connex_set[ind_set_k]:
+					connex_set_index[l] = ind_new_set
+				connex_set[ind_new_set] = connex_set[ind_set_j].union(connex_set[ind_set_k])
+				connex_set_index[j] = ind_new_set
+				connex_set_index[k] = ind_new_set
 				compt += 1
-			ind+=1
-		print(list_value_edges[ind])
-		
+				print(j,k)
+				ind_edges.append(sorted_index[ind])
+			ind += 1
+			
+		# print(ind_edges)
+		# print(list_value_edges[ind])
+		print("")
 		adj = np.zeros((self.n,self.n),dtype = 'bool')
 		edges_value = np.zeros((self.n,self.n))
 		for k in ind_edges :
 			(i,j) = list_index_edges[k]
+			print(i,j)
 			adj[i][j] = True
 			adj[j][i] = True
 			v = list_value_edges[k]
