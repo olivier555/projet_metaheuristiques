@@ -166,7 +166,7 @@ class Solution():
 		return (M_numbers,M_list) #, M_numbers[0], M_list[0])
 
 
-	def greedy_reparation(self,data, M_numbers, M_list):
+	def greedy_reparation_com(self,data, M_numbers, M_list):
 		M_list = [[set(i) for i in j]for j in M_list]
 		reached = self.reached(data)
 		sensors = self.get_index_sensors()
@@ -189,19 +189,30 @@ class Solution():
 							M_list[i][k] = M_list[i][j].union(M_list[j][i])
 							M_list[k][i] = M_list[i][j].union(M_list[j][i])
 			reached = self.reached(data)
-		# 	adjacency = np.ones((self.value,self.value),dtype = 'bool')
-		# else :
-		# 	adjacency = np.ones((self.value + 1,self.value + 1),dtype = 'bool')
-		# for i in range(len(adjacency)):
-		# 	adjacency[i][i] = False 
-		# g = Graph(len(sensors),adjacency = adjacency,edges_value = np.array(M_numbers))
 
-
-		# reached = self.reached(data)
-		# index_sensors = self.get_index_sensors()
-		# while len(reached) != self.value + (1 - self.sensors[0]):
-		# 	min = float('inf')
-		# 	for i in reached :
+	def kruskal_reparation_com(self,data, M_list, M_numbers):
+		
+		if self.is_sensor(0):
+			size_g = self.value
+			sensors = self.get_index_sensors()
+		else :
+			size_g = self.value + 1
+			sensors = [0] + self.get_index_sensors()
+		adj = np.ones((size_g,size_g),dtype = 'bool')
+		for i in range(size_g):
+			adj[i][i] = False
+		# adj.shape
+		# np.array([[M_numbers[i][j] for i in sensors] for j in sensors]).shape)
+		g = Graph(size_g,adjacency = adj,edges_value = np.array([[M_numbers[i][j] for i in sensors] for j in sensors]))
+		(adj, ev) = g.kruskal()
+		for i in range(size_g):
+			for j in range(i+1,size_g):
+				if adj[i][j]:
+					ind_i = sensors[i]
+					ind_j = sensors[j]
+					for k in M_list[ind_i][ind_j]:
+						self.add_sensor(k)
+		assert self.related(data)
 				
 
 
@@ -213,7 +224,7 @@ if __name__ == '__main__':
 
 	nb_rows = nb_columns = 15
 	r_com = 3
-	r_sens = 1
+	r_sens = 2
 	n = nb_columns*nb_rows
 	d = Data(r_com, r_sens, nb_rows, nb_columns)
 	b = [False for i in range(n)]
@@ -222,29 +233,19 @@ if __name__ == '__main__':
 		b[i] = True
 	s = Solution(n,b)
 	print(s.compute_value())
-	(M_numbers, M_list) = s.min_number_capt_to_add(d)
 	start = timer()
-	s.greedy_reparation(d, M_numbers, M_list)
+	(M_numbers, M_list) = s.min_number_capt_to_add(d)
+	print(timer() - start)
+
+	s2 = s
+	start = timer()
+	s2.greedy_reparation_com(d, M_numbers, M_list)
+	print(timer()- start)
+	print(s2.compute_value())
+
+	start = timer()
+	s.kruskal_reparation_com(d, M_list, M_numbers)
 	print(timer()- start)
 	print(s.compute_value())
-	# print(M_numbers)
-	# adjacency = np.ones((len(sensors),len(sensors)),dtype = 'bool')
-	# for i in range(len(sensors)):
-	# 	adjacency[i][i] = False 
-
-	# g = Graph(len(sensors),adjacency = adjacency,edges_value = np.array(M_numbers))
-	# (adj,edges_value) = g.kruskal()
-	# # print(adj)
-	# # print(54*54)
-	# c = 0
-	# distances = d
-	# for i in range(len(sensors)):
-	# 	for j in range(len(sensors)):
-	# 		if adj[i][j]:
-	# 			# print(d.get_distance(sensors[i],sensors[j]))
-	# 			# print(M_list[i][j])
-	# 			# print(M_numbers[i][j])
-	# 			c += edges_value[i][j]
-	# print(c/2)
 
 

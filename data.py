@@ -89,3 +89,6 @@ class Data:
 
     def set_graph_com(self):
         self.g_com = Graph(self.n, self.get_matrix_com(), oriented = False, triangular_sup = False)    
+
+    def get_distance(self, i,j):
+        return np.sqrt(self.distances_2[i][j])
