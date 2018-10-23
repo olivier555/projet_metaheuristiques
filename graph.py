@@ -81,7 +81,7 @@ class Graph():
 							self.edges_value_d[(j,i)] = edges_value[j][i]
 		if self.edges_value_matrix:
 			assert self.oriented or np.allclose(self.edges_value_m, self.edges_value_m.T, atol = 1e-8),"matrix edges_value is not symmetric but oriented = False"
-		elif isinstance(self.edges_value_m,np.ndarray):
+		if isinstance(self.edges_value_m,np.ndarray):
 			assert self.oriented or np.allclose(self.edges_value_m, self.edges_value_m.T, atol = 1e-8),"matrix edges_value is not symmetric but oriented = False"
 		else:
 			for (i,j) in self.edges_value_d.keys():
@@ -178,6 +178,7 @@ class Graph():
 			edges_value[i][j] = v
 			edges_value[j][i] = v
 		return (adj, edges_value)
+
 
 
 
