@@ -139,22 +139,11 @@ class Graph():
 				if i < j:
 					list_value_edges.append(self.edges_value_d[(i,j)])
 					list_index_edges.append((i,j))  
-		# half_edges_value = np.triu(self.edges_value_m)
-		# half_edges_value = half_edges_value.reshape(self.n**2)
+		
 		sorted_index = np.argsort(list_value_edges)
-		# print(sorted_index)
-		# print(list_value_edges[sorted_index[0]])
 
-		# print(list_index_edges[1])
-
-		# test = True
-		# for i in range(100):
-		# 	print(list_value_edges[sorted_index[i]])
 		compt = 0
 		ind = 0
-		# new_neighbours = {}
-		# for i in range(self.n):
-		# 	new_neighbours[i] = set()
 		ind_edges = []
 		connex_set = {}
 		connex_set_index = {}
@@ -175,18 +164,14 @@ class Graph():
 				connex_set_index[j] = ind_new_set
 				connex_set_index[k] = ind_new_set
 				compt += 1
-				print(j,k)
 				ind_edges.append(sorted_index[ind])
 			ind += 1
-			
-		# print(ind_edges)
-		# print(list_value_edges[ind])
-		print("")
+
 		adj = np.zeros((self.n,self.n),dtype = 'bool')
 		edges_value = np.zeros((self.n,self.n))
 		for k in ind_edges :
 			(i,j) = list_index_edges[k]
-			print(i,j)
+
 			adj[i][j] = True
 			adj[j][i] = True
 			v = list_value_edges[k]
