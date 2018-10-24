@@ -49,6 +49,9 @@ class Solution():
 	def eligible(self, data):
 		return self.detected(data) and self.related(data)
 
+	def get_size(self):
+		return self.n
+
 	def add_sensor(self,i):
 		if not self.sensors[i]:
 			self.sensors[i] = True
