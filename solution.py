@@ -221,13 +221,13 @@ class Solution():
 
 if __name__ == '__main__':
 	import numpy as np
-	from graph_com import *
+	from greedy_connect import *
 	from data import *
 	from timeit import default_timer as timer
 
 	nb_rows = nb_columns = 15
-	r_com = 3
-	r_sens = 2
+	r_com = 1
+	r_sens = 1
 	n = nb_columns*nb_rows
 	d = Data(r_com, r_sens, nb_rows, nb_columns)
 	b = [False for i in range(n)]
