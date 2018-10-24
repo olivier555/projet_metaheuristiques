@@ -6,7 +6,9 @@ Created on Tue Oct 23 08:48:28 2018
 """
 
 import numpy as np
+import random as rd
 from solution import Solution
+from local_search import remove_targets
 
 class Fusion:
 
@@ -16,6 +18,7 @@ class Fusion:
         self.index_sorted_x = np.array([points_sorted_x.index(v) for v in data.points], int)
         points_sorted_y = sorted(data.points, key=lambda x: x[2])
         self.index_sorted_y = np.array([points_sorted_y.index(v) for v in data.points], int)
+        self.n = data.get_size()
 
     def fusion_horizontal(self, solution_1, solution_2, nb_test):
         return self.fusion(solution_1, solution_2, self.index_sorted_x, nb_test)
@@ -38,3 +41,46 @@ class Fusion:
             if new_other_solution.compute_value() < old_value:
                 if new_other_solution.eligible(self.data):
                     return new_other_solution
+
+    def fusion_horizontal_childrens(self, s_1, s_2):
+        return self.fusion_childrens(s_1, s_2, self.index_sorted_x, 1)
+
+    def fusion_vertical_childrens(self, s_1, s_2):
+        return self.fusion_childrens(s_1, s_2, self.index_sorted_y, 2)
+
+    def fusion_childrens(self, s_1, s_2, index_sorted, direction):
+        i = rd.randint(1, self.n-2)
+        while not(s_1.is_sensor(i) or s_2.is_sensor(i)):
+            i = rd.randint(1, self.n-2)
+        index_left = index_sorted[1:i]
+        index_right = index_sorted[i+1:]
+        # we have two set of vertices separated by the index i.
+        # we creat two new solutions by combining the sensors of each set for two different solutions
+        child_1 = Solution(self.n, s_1.sensors * (index_sorted <= i) + s_2.sensors * (index_sorted > i)) 
+        child_2 = Solution(self.n, s_2.sensors * (index_sorted <= i) + s_1.sensors * (index_sorted > i))
+        childrens = [child_1,child_2]
+        for c in childrens:
+            if not(c.eligible(self.data)):
+                self.restore(c, index_sorted, i, direction)
+        return childrens
+    
+    def restore(self, s, index_sorted, i, direction): #direction vaut 1 ou 2
+        center_value = self.data.points[index_sorted[i]][direction]
+        sensors_to_add = [index_sorted[i]]
+        r = (self.data.r_com)**2
+        
+        for d in [-1,1]:
+        #in both ways
+            j = i + d
+            add_direction = (self.data.points[index_sorted[j]][direction] - center_value)**2 < r
+            while add_direction and j < self.n-1 and j > 0:
+                sensors_to_add.append(index_sorted[j])
+                j += d
+                add_direction = (self.data.points[index_sorted[j]][direction] - center_value)**2 < r
+
+        for i in sensors_to_add:
+            s.add_sensor(i)
+
+        remove_targets(s,self.data)
+
+
