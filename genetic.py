@@ -20,12 +20,17 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 			childrens = fusion(population[2*j],population[2*j+1])
 			for k in range(2):
 				p = rd.random()
+				assert(childrens[k].eligible(data))
 				if p < mutation_proba:
 					childrens[k] = mutation(childrens[k])
+					# print('mutation done')
+					print('hey')
+				assert(childrens[k].eligible(data))
 			# childrens is a list of two doable solutions 
 			list_childrens += childrens
 			list_childrens_value += [childrens[0].compute_value(), childrens[1].compute_value()]
 		index_best_childrens = np.argsort(list_childrens_value)
+
 
 		parents_value = [s.compute_value() for s in population]
 		index_best_parents = np.argsort(parents_value)
@@ -39,6 +44,8 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 		print(min(values_pop))
 		t = timer() - start
 		i+=1
+		for j in population:
+			assert j.eligible(data)
 	return population
 
 
@@ -48,7 +55,6 @@ def mutation_1(s,data, p_ajout = 0.1):
 		s.add_sensor(i)
 
 	remove_targets(s, data)
-
 	search_two = SearchTwoToOne(data)
 	search_two.search(s, 10, 30)
 
