@@ -12,6 +12,7 @@ from lower_bound_founder import LowerBoundFounder
 from local_search import LocalSearch
 from fusion import Fusion
 from search_two_to_one import SearchTwoToOne
+from switch import Switch
 
 data = Data(r_com = 2, r_sens = 2, file_name = "Instances/captANOR1500_21_500.dat")
 #data = Data(r_com = 2, r_sens = 1, nb_rows = 5, nb_columns = 5)
@@ -34,9 +35,11 @@ local_search = LocalSearch()
 new_solution = local_search.remove_targets(solution, data)
 new_value = new_solution.compute_value()
 
+"""
 print("Search two to one ...")
 search_two = SearchTwoToOne(data)
 new_solution = search_two.search(new_solution, 10, 30)
+"""
 
 """
 print("Creating visualizations ...")
@@ -53,11 +56,25 @@ lower_bound_founder = LowerBoundFounder(data)
 result = lower_bound_founder.find_lower_bound()
 print("Lower bound :", - result.fun)"""
 
+
+
+print("switch")
+switch = Switch(data)
+
+
+
+
 print("Initial value: ", initial_value)
 print("Value after local search: ", new_value)
-if new_solution is not None:
-    print("Value after 2 to 1 search: ", new_solution.compute_value())
+for i in range(50):
+    switch.switch_sensors(new_solution, 10)
+    new_solution = local_search.remove_targets(new_solution, data)
+    print("Value after switch and local search: ", new_solution.compute_value())
 
+switch.switch_sensors(new_solution, 10)
+"""if new_solution is not None:
+    print("Value after 2 to 1 search: ", new_solution.compute_value())"""
+"""
 
 initial_solutions = [path_finder.create_path() for i in range(2)]
 
@@ -76,7 +93,7 @@ if new_solution_hor is not None:
     print("New value hor : ", new_solution_hor.compute_value())
 
 if new_solution_ver is not None:
-    print("New value ver: ", new_solution_ver.compute_value())
+    print("New value ver: ", new_solution_ver.compute_value())"""
 
 
 
