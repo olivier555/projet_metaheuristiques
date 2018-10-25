@@ -49,23 +49,32 @@ class Fusion:
         return self.fusion_childrens(s_1, s_2, self.index_sorted_y, 2)
 
     def fusion_childrens(self, s_1, s_2, index_sorted, direction):
-        i = rd.randint(1, self.n-2)
-        while not(s_1.is_sensor(i) or s_2.is_sensor(i)):
-            i = rd.randint(1, self.n-2)
-        index_left = index_sorted[1:i]
-        index_right = index_sorted[i+1:]
-        # we have two set of vertices separated by the index i.
-        # we creat two new solutions by combining the sensors of each set for two different solutions
-        child_1 = Solution(self.n, s_1.sensors * (index_sorted <= i) + s_2.sensors * (index_sorted > i)) 
-        child_2 = Solution(self.n, s_2.sensors * (index_sorted <= i) + s_1.sensors * (index_sorted > i))
-        childrens = [child_1,child_2]
-        for c in childrens:
-            if not(c.eligible(self.data)):
-                # s = set(c.get_index_sensors())
-                self.restore(c, index_sorted, i, direction)
-                # print(set(c.get_index_sensors()) - s)
-            assert c.eligible(self.data)
-        return childrens
+        r = []
+        compt = 0
+        # samp = np.random.binomial(self.n-3, 0.5, 100) + 1
+        while compt < 100 and len(r) < 2:
+            # i = samp[compt]
+            i = rd.randint(1,self.n - 2)
+            # while not(s_1.is_sensor(i) or s_2.is_sensor(i)):
+            #     i = rd.randint(1, self.n-2)
+            # we have two set of vertices separated by the index i.
+            # we creat two new solutions by combining the sensors of each set for two different solutions
+            child_1 = Solution(self.n, s_1.sensors * (index_sorted <= i) + s_2.sensors * (index_sorted > i)) 
+            child_2 = Solution(self.n, s_2.sensors * (index_sorted <= i) + s_1.sensors * (index_sorted > i))
+            childrens = [child_1,child_2]
+            v_min = min(s_1.value,s_2.value)
+            for c in childrens:
+                if not(c.eligible(self.data)):
+                    if c.value < v_min :
+                        # s = set(c.get_index_sensors())
+                        self.restore(c, index_sorted, i, direction)
+                        # print(set(c.get_index_sensors()) - s)
+                        assert c.eligible(self.data)
+                        r.append(c)
+                else :
+                    r.append(c)
+            compt+=1
+        return r
     
     def restore(self, s, index_sorted, i, direction): #direction vaut 1 ou 2
         if direction == 1:

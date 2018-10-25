@@ -27,9 +27,10 @@ class SearchTwoToOne:
                                   + self.data.get_neighbours_sens(index_sensors[index_min[1]]))
             for i in range(min(nb_test_couple, len(common_neighbours))):
                 n = common_neighbours.pop()
-                solution.add_sensor(n)
-                if solution.eligible(self.data):
-                    return solution
-                solution.remove_sensor(n)
+                if not solution.is_sensor(n):
+                    solution.add_sensor(n)
+                    if solution.eligible(self.data):
+                        return 
+                    solution.remove_sensor(n)
             solution.add_sensor(index_sensors[index_min[0]])
             solution.add_sensor(index_sensors[index_min[1]])
