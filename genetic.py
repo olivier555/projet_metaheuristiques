@@ -5,7 +5,7 @@ from search_two_to_one import SearchTwoToOne
 from local_search import remove_targets
 
 
-def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.3, prop_children_kept = 0.7, t_max = 60):
+def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.4, prop_children_kept = 0.7, t_max = 60):
 	start = timer()
 	t = 0
 	n = len(population)
@@ -19,12 +19,12 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 		np.random.shuffle(population)
 		list_childrens = []
 		list_childrens_value = []
-		t_f = 0
-		t_m = 0
+		# t_f = 0
+		# t_m = 0
 		for j in range(int(n/2)):
-			start_f = timer()
+			# start_f = timer()
 			childrens = fusion(population[2*j],population[2*j+1])
-			t_f += timer() - start_f
+			# t_f += timer() - start_f
 			for c in childrens:
 				p = rd.random()
 				# assert(childrens[k].eligible(data))
@@ -33,7 +33,6 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 				# 	c = mutation(c)
 				# 	t_m += timer() - start_m
 					# print('mutation done')
-					# print('hey')
 				# assert(childrens[k].eligible(data))
 			# childrens is a list of two doable solutions 
 			list_childrens += childrens
@@ -59,7 +58,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 			if p < mutation_proba:
 				start_m = timer()
 				c = mutation(c)
-				t_m += timer() - start_m
+				# t_m += timer() - start_m
 
 		values_pop = [s.compute_value() for s in population]
 		print('minimum initial value...')
@@ -69,8 +68,8 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 		for j in population:
 			assert j.eligible(data)
 
-		print('time fusion :',t_f)
-		print('time mutation :', t_m)
+		# print('time fusion :',t_f)
+		# print('time mutation :', t_m)
 	return [population,best_sol]
 
 
