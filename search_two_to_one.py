@@ -18,8 +18,8 @@ class SearchTwoToOne:
     def search(self, solution, nb_couple, nb_test_couple):
         index_sensors = [i for i in range(len(solution.sensors)) if solution.sensors[i]]
         sub_distances = self.distances[solution.sensors][:, solution.sensors]
-        indexes = np.argpartition(sub_distances.flat, nb_couple)
-        for i in range(nb_couple):
+        indexes = np.argpartition(sub_distances.flat, min(nb_couple, len(sub_distances.flat) - 1))
+        for i in range(min(nb_couple, len(sub_distances.flat))):
             index_min = np.unravel_index(indexes[i], sub_distances.shape)
             solution.remove_sensor(index_sensors[index_min[0]])
             solution.remove_sensor(index_sensors[index_min[1]])

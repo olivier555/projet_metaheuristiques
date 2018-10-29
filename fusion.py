@@ -18,6 +18,10 @@ class Fusion:
         self.index_sorted_x = np.array([self.points_sorted_x.index(v) for v in data.points], int)
         self.points_sorted_y = sorted(data.points, key=lambda x: x[2])
         self.index_sorted_y = np.array([self.points_sorted_y.index(v) for v in data.points], int)
+        self.distances_diag = [(0.95 * x[2] + x[1]) / (1 + 0.95 ** 2) for x in data.points]
+        self.distances_diag.sort()
+        self.points_sorted_diag = sorted(data.points, key=lambda x: (0.95 * x[2] + x[1]) / (1 + 0.95 ** 2))
+        self.index_sorted_diag = np.array([self.points_sorted_y.index(v) for v in data.points], int)
         self.n = data.get_size()
 
     def fusion_horizontal(self, solution_1, solution_2, nb_test):
@@ -47,6 +51,9 @@ class Fusion:
 
     def fusion_vertical_childrens(self, s_1, s_2):
         return self.fusion_childrens(s_1, s_2, self.index_sorted_y, 2)
+
+    def fusion_diag_childrens(self, s_1, s_2):
+        return self.fusion_childrens(s_1, s_2, self.index_sorted_diag, 3)
 
     def fusion_childrens(self, s_1, s_2, index_sorted, direction):
         r = []
@@ -79,30 +86,37 @@ class Fusion:
     def restore(self, s, index_sorted, i, direction): #direction vaut 1 ou 2
         if direction == 1:
             center_value = self.points_sorted_x[i][1]
-        else :
+        elif direction == 2:
             center_value = self.points_sorted_y[i][2]
+        else:
+            center_value = self.distances_diag[i]
 
         sensors_to_add = [i]
-        r = (self.data.r_com)**2        
+        r = self.data.r_com      
         for d in [-1,1]:
         #in both ways
             j = i
             add_direction = True
             while add_direction and j < self.n and j > 0:
                 if direction == 1:
-                    add_direction = (self.points_sorted_x[j][1]- center_value)**2 < r
+                    add_direction = abs(self.points_sorted_x[j][1]- center_value) < r
                     ind = self.points_sorted_x[j][0]
-                else :
-                    add_direction = (self.points_sorted_y[j][2]- center_value)**2 < r
+                elif direction == 2:
+                    add_direction = abs(self.points_sorted_y[j][2]- center_value) < r
                     ind = self.points_sorted_y[j][0]
+                else:
+                    add_direction = abs(self.distances_diag[j] - center_value) < r
+                    ind = self.points_sorted_diag[j][0]
                 if add_direction :
                     sensors_to_add.append(ind)
                 j += d
                 # add_direction = (self.data.points[index_sorted[j]][direction] - center_value)**2 < r
 
+        print(len(sensors_to_add))
         for i in sensors_to_add:
             s.add_sensor(i)
 
-        # remove_targets(s,self.data)
+        # assert s.eligible(self.data)
+        remove_targets(s, self.data)
 
 

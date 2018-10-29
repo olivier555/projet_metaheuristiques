@@ -101,8 +101,8 @@ if __name__ == '__main__':
 	from initial_path_finder import PathFinder
 	from switch import Switch
 
-	data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
-	# data = Data(r_com = 2, r_sens = 1, nb_rows = 15, nb_columns = 15)
+	# data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
+	data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
 	n_population = 50
 	population = []
 
