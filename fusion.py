@@ -21,7 +21,7 @@ class Fusion:
         self.distances_diag = [(0.95 * x[2] + x[1]) / (1 + 0.95 ** 2) for x in data.points]
         self.distances_diag.sort()
         self.points_sorted_diag = sorted(data.points, key=lambda x: (0.95 * x[2] + x[1]) / (1 + 0.95 ** 2))
-        self.index_sorted_diag = np.array([self.points_sorted_y.index(v) for v in data.points], int)
+        self.index_sorted_diag = np.array([self.points_sorted_diag.index(v) for v in data.points], int)
         self.n = data.get_size()
 
     def fusion_horizontal(self, solution_1, solution_2, nb_test):
@@ -112,11 +112,11 @@ class Fusion:
                 j += d
                 # add_direction = (self.data.points[index_sorted[j]][direction] - center_value)**2 < r
 
-        print(len(sensors_to_add))
+        print(i, len(sensors_to_add))
         for i in sensors_to_add:
             s.add_sensor(i)
 
-        # assert s.eligible(self.data)
+        assert s.eligible(self.data)
         remove_targets(s, self.data)
 
 
