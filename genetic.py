@@ -73,7 +73,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 	return [population,best_sol]
 
 
-def mutation_1(s,data, switch, search_two, p_ajout = 0.1):
+def mutation_1(s,data, switch, search_two, p_ajout = 0.5):
 	while rd.random() < p_ajout:
 		i = rd.randint(0, s.get_size()-1)
 		s.add_sensor(i)
@@ -101,9 +101,9 @@ if __name__ == '__main__':
 	from initial_path_finder import PathFinder
 	from switch import Switch
 
-	data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
-	# data = Data(r_com = 2, r_sens = 1, nb_rows = 15, nb_columns = 15)
-	n_population = 50
+	# data = Data(r_com = 3, r_sens = 2, file_name = "Instances/captANOR625_15_100.dat")
+	data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
+	n_population = 1000
 	population = []
 
 	switch = Switch(data)
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 			return f.fusion_horizontal_childrens(s_1,s_2)
 
 
-	[population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 10000, t_max  = 30)
+	[population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 10000, t_max  = 300)
 	
 	print(best_solution.value)
 	switch.switch_sensors(best_solution, 100, 100)
