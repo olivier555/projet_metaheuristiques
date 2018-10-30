@@ -73,7 +73,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 	return [population,best_sol]
 
 
-def mutation_1(s,data, switch, search_two, p_ajout = 0.1):
+def mutation_1(s,data, switch, search_two, p_ajout = 0.5):
 	while rd.random() < p_ajout:
 		i = rd.randint(0, s.get_size()-1)
 		s.add_sensor(i)
@@ -135,7 +135,7 @@ if __name__ == '__main__':
 			return f.fusion_horizontal_childrens(s_1,s_2)
 
 
-	[population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 10000, t_max  = 30)
+	[population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 10000, t_max  = 300)
 	
 	print(best_solution.value)
 	switch.switch_sensors(best_solution, 100, 100)
