@@ -19,12 +19,14 @@ class SearchTwoToOne:
         index_sensors = [i for i in range(len(solution.sensors)) if solution.sensors[i]]
         sub_distances = self.distances[solution.sensors][:, solution.sensors]
         indexes = np.argpartition(sub_distances.flat, min(nb_couple, len(sub_distances.flat) - 1))
+        removed = []
         for i in range(min(nb_couple, len(sub_distances.flat))):
             index_min = np.unravel_index(indexes[i], sub_distances.shape)
+            if index_min[0] in removed or index_min[1] in removed:
+                continue
             solution.remove_sensor(index_sensors[index_min[0]])
             solution.remove_sensor(index_sensors[index_min[1]])
-            common_neighbours = set(self.data.get_neighbours_sens(index_sensors[index_min[0]])
-                                  + self.data.get_neighbours_sens(index_sensors[index_min[1]]))
+            common_neighbours = set(self.data.get_neighbours_sens(index_sensors[index_min[0]])).intersection(self.data.get_neighbours_sens(index_sensors[index_min[1]]))
             success = False
             for i in range(min(nb_test_couple, len(common_neighbours))):
                 n = common_neighbours.pop()
@@ -37,3 +39,6 @@ class SearchTwoToOne:
             if not success:
                 solution.add_sensor(index_sensors[index_min[0]])
                 solution.add_sensor(index_sensors[index_min[1]])
+            else:
+                removed.append(index_min[0])
+                removed.append(index_min[1])

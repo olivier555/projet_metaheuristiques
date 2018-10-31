@@ -42,9 +42,10 @@ class Data:
         for line in lines:
             new_line = [v.split(" ") for v in line.split(" ") if v != '']
             if len(new_line) != 0:
-                points.append([int(new_line[0][0]),
-                             float(new_line[1][0]),
-                             float(new_line[2][0])])
+                if float(new_line[1][0]) < 4 and float(new_line[2][0]) < 4:
+                    points.append([int(new_line[0][0]),
+                                 float(new_line[1][0]),
+                                 float(new_line[2][0])])
         return points
 
     def create_matrix_distance(self):

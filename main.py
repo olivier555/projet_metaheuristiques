@@ -14,7 +14,7 @@ from fusion import Fusion
 from search_two_to_one import SearchTwoToOne
 from switch import Switch
 
-data = Data(r_com = 2, r_sens = 2, file_name = "Instances/captANOR225_9_20.dat")
+data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR225_9_20.dat")
 #data = Data(r_com = 1, r_sens = 1, nb_rows = 5, nb_columns = 5)
 
 
