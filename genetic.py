@@ -6,7 +6,7 @@ from local_search import remove_targets
 
 
 def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.4, prop_children_kept = 0.7, t_max = 60, timings = False):
-	# start = timer()
+	start = timer()
 	t = 0
 	n = len(population)
 	i = 1
@@ -15,7 +15,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 	best = best_sol.value
 	while i < n_iter and t < t_max:
 		# print('')
-		# print("genetic iteration :", i)
+		print("genetic iteration :", i)
 		np.random.shuffle(population)
 		list_childrens = []
 		list_childrens_value = []
@@ -68,6 +68,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 					start_m = timer()
 					c = mutation(c)
 					t_m += timer() - start_m
+					n_mutation += 1
 				else:
 					c = mutation(c)
 					n_mutation += 1
@@ -76,7 +77,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 		values_pop = [s.compute_value() for s in population]
 		# print('minimum value...')
 		# print(min(values_pop))
-		# t = timer() - start
+		t = timer() - start
 		i+=1
 		# for j in population:
 		# 	assert j.eligible(data)
