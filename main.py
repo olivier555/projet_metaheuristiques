@@ -14,15 +14,15 @@ from fusion import Fusion
 from search_two_to_one import SearchTwoToOne
 from switch import Switch
 
-#data = Data(r_com = 2, r_sens = 2, file_name = "Instances/captANOR1500_21_500.dat")
-data = Data(r_com = 1, r_sens = 1, nb_rows = 5, nb_columns = 5)
+data = Data(r_com = 2, r_sens = 2, file_name = "Instances/captANOR225_9_20.dat")
+#data = Data(r_com = 1, r_sens = 1, nb_rows = 5, nb_columns = 5)
 
-"""
+
 print("Founding solution ...")
 path_finder = PathFinder(data)
 solution = path_finder.create_path()
 initial_value = solution.compute_value()
-"""
+
 
 """
 print("Creating visualizations ...")
@@ -32,31 +32,34 @@ visualizator.print_sensors()
 visualizator.print_sensors_com()
 visualizator.print_sensors_sens()
 """
-"""
 print("Local search ...")
 remove_targets(solution, data)
-new_value = new_solution.compute_value()
-"""
-"""
-print("Search two to one ...")
-search_two = SearchTwoToOne(data)
-new_solution = search_two.search(new_solution, 10, 30)
-"""
+new_value = solution.compute_value()
 
-"""
-print("Creating visualizations ...")
-visualizator = Visualizator(data, new_solution)
+visualizator = Visualizator(data, solution)
 
 visualizator.print_sensors()
-visualizator.print_sensors_com()
-visualizator.print_sensors_sens()
-"""
 
+
+print("Search two to one ...")
+search_two = SearchTwoToOne(data)
+search_two.search(solution, 10, 30)
+
+print("Creating visualizations ...")
+visualizator = Visualizator(data, solution)
+
+visualizator.print_sensors()
+print(new_value)
+print(solution.compute_value())
+#visualizator.print_sensors_com()
+#visualizator.print_sensors_sens()
+
+"""
 print("Lower bound ...")
 lower_bound_founder = LowerBoundFounder(data)
 result = lower_bound_founder.find_lower_bound()
 print("Lower bound :", - result.fun)
-
+"""
 
 """
 print("switch")
