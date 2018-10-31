@@ -39,11 +39,18 @@ class Solution():
 			next_vertex = next_vertex.union(new)
 		return reached
 
-	def related(self,data):
+	def related(self, data):
 		reached = self.reached(data)
 		return len(reached) == self.value + (1 - self.sensors[0])
 		# we want to reach all the sensors from the hole, but we don't want
 		# to count the hole twice if it's a sensor
+
+	def related_removed(self, data, removed):
+		reached = self.reached(data)
+		return len(reached) == self.value + (1 - self.sensors[0])
+		# we want to reach all the sensors from the hole, but we don't want
+		# to count the hole twice if it's a sensor
+
 
 
 	def eligible(self, data):

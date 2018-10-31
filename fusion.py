@@ -115,7 +115,6 @@ class Fusion:
         for i in sensors_to_add:
             s.add_sensor(i)
 
-        assert s.eligible(self.data)
         remove_targets(s, self.data)
 
 
