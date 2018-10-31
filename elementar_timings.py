@@ -30,7 +30,7 @@ t_fusion = {}
 number_mutation = {}
 number_fusion = {}
 list_r = [(1,1), (2,1),(2,2),(3,2)]
-n_population = 50
+n_population = 30
 # nb_switch = [2*i for i in range(1,30)]
 
 
@@ -100,7 +100,7 @@ for n in size_instance :
 			else:
 				t_remove_targets_two[(n,r_com,r_sens)] = [(timer() - start)/n_population]
 
-			[population,best_solution, n_fusion, n_mutation, t_f, t_m] = genetic(solutions, data, mutation, fusion, n_iter = 50, t_max = 120, timings = True)
+			[population,best_solution, n_fusion, n_mutation, t_f, t_m] = genetic(solutions, data, mutation, fusion, n_iter = 30, t_max = 60, timings = True)
 
 
 			if (n,r_com, r_sens) in number_fusion:
@@ -154,5 +154,5 @@ df['number_mutation'] = pd.Series(number_fusion)
 df['t_remove_targets_ini'] = pd.Series(t_remove_targets_ini)
 df['t_path_finder'] = pd.Series(t_path_finder)
 df['t_switch_ini'] = pd.Series(t_switch_ini)
-
+df['t_remove_targets_two'] = pd.Series(t_remove_targets_two)
 df.to_csv('timings.csv')
