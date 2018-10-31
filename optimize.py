@@ -14,21 +14,15 @@ import random as rd
 from timeit import default_timer as timer
 
 def create_initial_population(data, nb_population, switch):
-    t = 0
     population = []
     path_finder = PathFinder(data)
     for i in range(nb_population):
         solution = path_finder.create_path()
-        t0 = timer()
         remove_targets(solution,data)
-        t += timer() - t0
         j = rd.randint(0,5 * int(solution.value))
         switch.switch_sensors(solution, 5, j)
-        t0 = timer()
         remove_targets(solution,data)
-        t += timer() - t0
         population.append(solution)
-    print(t)
     return population
 
 def treat_best_solution(solution, data, switch, search_two):
@@ -38,7 +32,7 @@ def treat_best_solution(solution, data, switch, search_two):
     remove_targets(solution, data)
     search_two.search(solution, solution.value, solution.value)
 
-def optimize(data, nb_population, nb_iter_max, t_max, p_mutation, prop_children_kept):
+def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept):
     switch = Switch(data)
     search_two = SearchTwoToOne(data)
     fusioner = Fusion(data)
@@ -53,7 +47,7 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation, prop_children_
         else:
             return fusioner.fusion_diag_childrens(s_1, s_2)
     initial_population = create_initial_population(data, nb_population, switch)
-    [population,best_solution] = genetic(initial_population, data, mutation, fusion, nb_iter_max, p_mutation, prop_children_kept, t_max)
+    [population,best_solution] = genetic(initial_population, data, mutation, fusion, nb_iter_max, p_mutation_min, p_mutation_max, prop_children_kept, t_max)
     treat_best_solution(best_solution, data, switch, search_two)
     return best_solution
 
@@ -62,9 +56,10 @@ if __name__ == '__main__':
     # data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
     data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
     nb_population = 20
-    nb_iter_max = 1
+    nb_iter_max = 10
     t_max = 20
-    p_mutation = 0.3
+    p_mutation_min = 0.3
+    p_mutation_max = 0.6
     prop_children_kept = 0.8
 
-    solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation, prop_children_kept)
+    solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept)
