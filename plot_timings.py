@@ -32,7 +32,7 @@ df.drop('n,r_com,r_sens', axis = 1, inplace = True)
 
 
 # 
-list_r = [(1,1), (2,1)] 
+list_r = [(1,1), (2,1),(2,2),(3,2)]
 df['tps_ini'] = df['t_remove_targets_two'] + df['t_path_finder']
 
 
