@@ -4,96 +4,7 @@ import random as rd
 from search_two_to_one import SearchTwoToOne
 from local_search import remove_targets
 
-
-<<<<<<< HEAD
 def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min = 0.4, mutation_proba_max = 0.6, prop_children_kept = 0.7, t_max = 60, timings = False):
-    start = timer()
-    t = 0
-    n = len(population)
-    i = 1
-    n_stagnancy = 0
-    values_pop = [s.value for s in population]
-    best_sol = population[np.argmin(values_pop)]
-    best = best_sol.value
-    while i < n_iter and t < t_max:
-        # print('')
-        # print("genetic iteration :", i)
-        np.random.shuffle(population)
-        list_childrens = []
-        list_childrens_value = []
-        if timings :
-            t_f = 0
-            t_m = 0
-            n_mutation = 0
-            n_fusion = 0
-        for j in range(int(n/2)):
-            if timings:
-                start_f = timer()
-                childrens = fusion(population[2*j],population[2*j+1])
-                t_f += timer() - start_f
-                n_fusion += 1
-            else:
-                childrens = fusion(population[2*j],population[2*j+1])
-
-            # for c in childrens:
-            #     p = rd.random()
-                # assert(childrens[k].eligible(data))
-                # if p < mutation_proba:
-                #     start_m = timer()
-                #     c = mutation(c)
-                #     t_m += timer() - start_m
-                    # print('mutation done')
-                # assert(childrens[k].eligible(data))
-            # childrens is a list of two doable solutions 
-            list_childrens += childrens
-            list_childrens_value += [c.compute_value() for c in childrens]
-        index_best_childrens = np.argsort(list_childrens_value)
-
-
-        parents_value = [s.compute_value() for s in population]
-        index_best_parents = np.argsort(parents_value)
-
-        n_childrens = min(int(n*prop_children_kept),len(list_childrens))
-        # print('n_childrens :', n_childrens)
-        n_parents = n - n_childrens
-        population = [population[index_best_parents[i]] for i in range(n_parents)]
-        population += [list_childrens[index_best_childrens[i]] for i in range(n_childrens)]
-        values_pop = [s.compute_value() for s in population]
-        best_actual = min(values_pop)
-        if best_actual < best:
-            best_sol = population[np.argmin(values_pop)]
-            best = best_actual
-            n_stagnancy = 0
-        else:
-            n_stagnancy += 1
-        for c in population:
-            p = rd.random()
-            mutation_proba = min(mutation_proba_max, mutation_proba_min + 10 * (mutation_proba_max - mutation_proba_min))
-            if p < mutation_proba:
-                if timings:
-                    start_m = timer()
-                    c = mutation(c)
-                    t_m += timer() - start_m
-                else:
-                    c = mutation(c)
-
-
-        values_pop = [s.compute_value() for s in population]
-        # print('minimum value...')
-        # print(min(values_pop))
-        t = timer() - start
-        i+=1
-        # for j in population:
-        #     assert j.eligible(data)
-
-        # print('time fusion :',t_f)
-        # print('time mutation :', t_m)
-    if timings :
-        return [population,best_sol, n_fusion, n_mutation, t_f, t_m]
-    else:
-        return[population,best_sol]
-=======
-def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.4, prop_children_kept = 0.7, t_max = 60, timings = False):
 	start = timer()
 	t = 0
 	n = len(population)
@@ -151,7 +62,8 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 			best = best_actual
 		for c in population:
 			p = rd.random()
-			if p < mutation_proba:
+            mutation_proba = min(mutation_proba_max, mutation_proba_min + 10 * (mutation_proba_max - mutation_proba_min))
+            if p < mutation_proba:
 				if timings:
 					start_m = timer()
 					c = mutation(c)
@@ -176,7 +88,6 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 		return [population,best_sol, n_fusion, n_mutation, t_f, t_m]
 	else:
 		return[population,best_sol]
->>>>>>> 188de6bc96b31ce539d93368ec394f83fe3330cc
 
 
 
