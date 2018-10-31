@@ -27,8 +27,8 @@ df.drop('n,r_com,r_sens', axis = 1, inplace = True)
 # df.set_index(['n','r_com','r_sens'], inplace = True)
 
 
-for n in df.columns:
-	df[n] = df[n].apply(lambda x: list_from_str(x)[0])
+# for n in df.columns:
+# 	df[n] = df[n].apply(lambda x: list_from_str(x)[0])
 
 
 # 
