@@ -71,7 +71,6 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
                     n_mutation += 1
                 else:
                     c = mutation(c)
-                    n_mutation += 1
 
 
         values_pop = [s.compute_value() for s in population]

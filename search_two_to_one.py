@@ -29,8 +29,8 @@ class SearchTwoToOne:
                 n = common_neighbours.pop()
                 if not solution.is_sensor(n):
                     solution.add_sensor(n)
-                    if solution.eligible(self.data):
-                        return 
+                    if solution.eligible_two_to_one(self.data, index_sensors[index_min[0]], index_sensors[index_min[1]], n):
+                        break
                     solution.remove_sensor(n)
             solution.add_sensor(index_sensors[index_min[0]])
             solution.add_sensor(index_sensors[index_min[1]])

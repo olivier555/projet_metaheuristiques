@@ -65,8 +65,26 @@ class Solution():
 
     def related_switch(self, data, id_removed, id_add):
         index_sensors = self.get_index_sensors() + [0]
-        neighbours_com = list(set(data.get_neighbours_com(id_removed)).intersection(index_sensors))
-        set_neighbours = set(neighbours_com)
+        set_neighbours = set(data.get_neighbours_com(id_removed)).intersection(index_sensors)
+        first_vertex = id_add
+        next_vertex = set(data.get_neighbours_com(first_vertex)).intersection(index_sensors + [0])
+        reached = {first_vertex}.union(next_vertex)
+        if first_vertex in next_vertex:
+            next_vertex.remove(first_vertex)
+        marked = {first_vertex}
+        while len(next_vertex) > 0 and not set_neighbours.issubset(reached):
+            index = next_vertex.pop()
+            marked.add(index)
+            new = set(data.get_neighbours_com(index)).intersection(index_sensors) - marked
+            reached = reached.union(new)
+            next_vertex = next_vertex.union(new)
+        return set_neighbours.issubset(reached)
+
+    def related_two_to_one(self, data, id_removed_1, id_removed_2, id_add):
+        index_sensors = self.get_index_sensors() + [0]
+        set_neighbours_1 = set(data.get_neighbours_com(id_removed_1)).intersection(index_sensors)
+        set_neighbours_2 = set(data.get_neighbours_com(id_removed_2)).intersection(index_sensors)
+        set_neighbours = set_neighbours_1.union(set_neighbours_2)
         first_vertex = id_add
         next_vertex = set(data.get_neighbours_com(first_vertex)).intersection(index_sensors + [0])
         reached = {first_vertex}.union(next_vertex)
@@ -88,6 +106,9 @@ class Solution():
 
     def eligible_switch(self, data, id_removed, id_add):
         return self.detected(data) and self.related_switch(data, id_removed, id_add)
+
+    def eligible_two_to_one(self, data, id_removed_1, id_removed_2, id_add):
+        return self.detected(data) and self.related_two_to_one(data, id_removed_1, id_removed_2, id_add)
 
     def get_size(self):
         return self.n
