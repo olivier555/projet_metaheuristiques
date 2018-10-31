@@ -16,7 +16,7 @@ def remove_targets(solution, data):
     for s in sensors:
         if (np.extract(M[s], nb_sens)).all():
             solution.remove_sensor(s)
-            if not solution.related(data):
+            if not solution.related_removed(data, s):
                 solution.add_sensor(s)
             else:
                 nb_sens = np.matmul(M, solution.sensors.astype(int)) >= 2

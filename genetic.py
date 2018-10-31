@@ -6,7 +6,7 @@ from local_search import remove_targets
 
 
 def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.4, prop_children_kept = 0.7, t_max = 60, timings = False):
-	# start = timer()
+	start = timer()
 	t = 0
 	n = len(population)
 	i = 1
@@ -76,7 +76,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba = 0.
 		values_pop = [s.compute_value() for s in population]
 		# print('minimum value...')
 		# print(min(values_pop))
-		# t = timer() - start
+		t = timer() - start
 		i+=1
 		# for j in population:
 		# 	assert j.eligible(data)

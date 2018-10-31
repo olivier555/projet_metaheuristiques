@@ -11,17 +11,24 @@ from fusion import *
 from initial_path_finder import PathFinder
 from switch import Switch
 import random as rd
+from timeit import default_timer as timer
 
 def create_initial_population(data, nb_population, switch):
+    t = 0
     population = []
     path_finder = PathFinder(data)
     for i in range(nb_population):
         solution = path_finder.create_path()
+        t0 = timer()
         remove_targets(solution,data)
+        t += timer() - t0
         j = rd.randint(0,5 * int(solution.value))
         switch.switch_sensors(solution, 5, j)
+        t0 = timer()
         remove_targets(solution,data)
+        t += timer() - t0
         population.append(solution)
+    print(t)
     return population
 
 def treat_best_solution(solution, data, switch, search_two):
@@ -55,7 +62,7 @@ if __name__ == '__main__':
     # data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
     data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
     nb_population = 20
-    nb_iter_max = 1000
+    nb_iter_max = 1
     t_max = 20
     p_mutation = 0.3
     prop_children_kept = 0.8

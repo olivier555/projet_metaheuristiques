@@ -23,7 +23,7 @@ class Switch:
             nb_neighbours = self.nb_neighbours[s]
             neighbours_eligible = []
             for n in self.data.get_neighbours_sens(s):
-                if self.nb_neighbours[n] > nb_neighbours and not solution.is_sensor(n):
+                if self.nb_neighbours[n] >= nb_neighbours and not solution.is_sensor(n):
                     neighbours_eligible.append(n)
             
             sample = random.sample(neighbours_eligible,min(len(neighbours_eligible),nb_test))
@@ -33,7 +33,7 @@ class Switch:
                 for c in range(min(len(neighbours_eligible), nb_test)):
                     new_s = neighbours_eligible.pop()
                     solution.add_sensor(new_s)
-                    if solution.eligible(self.data):
+                    if solution.eligible_switch(self.data, s, new_s):
                         modified = True
                         break
                     solution.remove_sensor(new_s)
