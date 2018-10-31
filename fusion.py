@@ -76,8 +76,8 @@ class Fusion:
                         # s = set(c.get_index_sensors())
                         self.restore(c, index_sorted, i, direction)
                         # print(set(c.get_index_sensors()) - s)
-                        assert c.eligible(self.data)
-                        r.append(c)
+                        if c.eligible(self.data):
+                            r.append(c)
                 else :
                     r.append(c)
             compt+=1
@@ -112,7 +112,6 @@ class Fusion:
                 j += d
                 # add_direction = (self.data.points[index_sorted[j]][direction] - center_value)**2 < r
 
-        print(i, len(sensors_to_add))
         for i in sensors_to_add:
             s.add_sensor(i)
 
