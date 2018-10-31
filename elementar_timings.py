@@ -4,6 +4,7 @@ from data import Data
 from switch import Switch
 from search_two_to_one import SearchTwoToOne
 from optimize import *
+import pandas as pd
 # print(os.path.dirname(sys.argv[0]))
 list_data = os.listdir('Instances/')
 
@@ -28,8 +29,8 @@ t_mutation = {}
 t_fusion = {}
 number_mutation = {}
 number_fusion = {}
-list_r = [(1,1), (2,1)]
-n_population = 20
+list_r = [(1,1), (2,1),(2,2),(3,2)]
+n_population = 50
 # nb_switch = [2*i for i in range(1,30)]
 
 
@@ -37,9 +38,9 @@ n_population = 20
 for n in size_instance :
 	for f in d[n]:
 		for (r_com,r_sens) in list_r:
+			print(" ")
 			print("working on instance :", f)
 			print("with (r_com,r_sens) =", (r_com,r_sens))
-			print(" ")
 			solutions = []
 
 			data = Data(r_com = r_com, r_sens = r_sens, file_name = 'Instances/'+ f)
@@ -99,7 +100,7 @@ for n in size_instance :
 			else:
 				t_remove_targets_two[(n,r_com,r_sens)] = [(timer() - start)/n_population]
 
-			[population,best_solution, n_fusion, n_mutation, t_f, t_m] = genetic(solutions, data, mutation, fusion, t_max = 600, timings = True)
+			[population,best_solution, n_fusion, n_mutation, t_f, t_m] = genetic(solutions, data, mutation, fusion, n_iter = 50, t_max = 120, timings = True)
 
 
 			if (n,r_com, r_sens) in number_fusion:
@@ -136,10 +137,22 @@ for n in size_instance :
 
 
 
-print(t_mutation)
-print(t_fusion)
-print(number_mutation)
-print(number_fusion)
-print(t_remove_targets_ini)
-print(t_path_finder)
-print(t_switch_ini)
+# print(t_mutation)
+# print(t_fusion)
+# print(number_mutation)
+# print(number_fusion)
+# print(t_remove_targets_ini)
+# print(t_path_finder)
+# print(t_switch_ini)
+
+
+df = pd.DataFrame.from_dict(t_mutation, orient='index', columns = ['t_mutation'])
+df.index.name = 'n,r_com,r_sens'
+df['t_fusion'] = pd.Series(t_fusion)
+df['number_fusion'] = pd.Series(number_mutation)
+df['number_mutation'] = pd.Series(number_fusion)
+df['t_remove_targets_ini'] = pd.Series(t_remove_targets_ini)
+df['t_path_finder'] = pd.Series(t_path_finder)
+df['t_switch_ini'] = pd.Series(t_switch_ini)
+
+df.to_csv('timings.csv')
