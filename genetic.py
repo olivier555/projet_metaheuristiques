@@ -64,9 +64,9 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
             n_stagnancy = 0
         else:
             n_stagnancy += 1
+        mutation_proba = min(mutation_proba_max, mutation_proba_min + (n_stagnancy / 10) * (mutation_proba_max - mutation_proba_min))
         for c in population:
             p = rd.random()
-            mutation_proba = min(mutation_proba_max, mutation_proba_min + (n_stagnancy / 10) * (mutation_proba_max - mutation_proba_min))
             if p < mutation_proba:
                 if timings:
                     start_m = timer()
