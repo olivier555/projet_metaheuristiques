@@ -22,7 +22,11 @@ print("Founding solution ...")
 path_finder = PathFinder(data)
 solution = path_finder.create_path()
 initial_value = solution.compute_value()
+"""
+visualizator = Visualizator(data, solution)
 
+visualizator.print_sensors()
+"""
 
 """
 print("Creating visualizations ...")
@@ -40,7 +44,15 @@ visualizator = Visualizator(data, solution)
 
 visualizator.print_sensors()
 
+print("switch")
+switch = Switch(data)
+switch.switch_sensors(solution, 5, 4)
 
+visualizator = Visualizator(data, solution)
+
+visualizator.print_sensors()
+
+"""
 print("Search two to one ...")
 search_two = SearchTwoToOne(data)
 search_two.search(solution, 10, 30)
@@ -49,6 +61,7 @@ print("Creating visualizations ...")
 visualizator = Visualizator(data, solution)
 
 visualizator.print_sensors()
+"""
 print(new_value)
 print(solution.compute_value())
 #visualizator.print_sensors_com()

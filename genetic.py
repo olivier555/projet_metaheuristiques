@@ -12,6 +12,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
     values_pop = [s.value for s in population]
     best_sol = population[np.argmin(values_pop)]
     best = best_sol.value
+    n_stagnancy = 10
     while i < n_iter and t < t_max:
         # print('')
         print("genetic iteration :", i)
@@ -60,9 +61,12 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
         if best_actual < best:
             best_sol = population[np.argmin(values_pop)]
             best = best_actual
+            n_stagnancy = 0
+        else:
+            n_stagnancy += 1
         for c in population:
             p = rd.random()
-            mutation_proba = min(mutation_proba_max, mutation_proba_min + 10 * (mutation_proba_max - mutation_proba_min))
+            mutation_proba = min(mutation_proba_max, mutation_proba_min + (n_stagnancy / 10) * (mutation_proba_max - mutation_proba_min))
             if p < mutation_proba:
                 if timings:
                     start_m = timer()
@@ -75,7 +79,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
 
         values_pop = [s.compute_value() for s in population]
         # print('minimum value...')
-        # print(min(values_pop))
+        print(min(values_pop))
         t = timer() - start
         i+=1
         # for j in population:

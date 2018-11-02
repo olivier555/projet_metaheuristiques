@@ -12,6 +12,7 @@ from initial_path_finder import PathFinder
 from switch import Switch
 import random as rd
 from timeit import default_timer as timer
+from visualization import Visualizator
 
 def create_initial_population(data, nb_population, switch):
     population = []
@@ -54,12 +55,15 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
 if __name__ == '__main__':
 
     # data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
-    data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
+    data = Data(r_com = 1, r_sens = 1, nb_rows = 9, nb_columns = 9)
     nb_population = 20
-    nb_iter_max = 10
+    nb_iter_max = 1000
     t_max = 20
     p_mutation_min = 0.3
     p_mutation_max = 0.6
     prop_children_kept = 0.8
 
     solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept)
+    visualizator = Visualizator(data, solution)
+
+    visualizator.print_sensors()
