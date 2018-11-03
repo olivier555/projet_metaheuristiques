@@ -45,6 +45,34 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
         n_parents = n - n_childrens
         population = [population[index_best_parents[i]] for i in range(n_parents)]
         population += [list_childrens[index_best_childrens[i]] for i in range(n_childrens)]
+        
+        
+        mutation_proba = min(mutation_proba_max, mutation_proba_min + (n_stagnancy / 10) * (mutation_proba_max - mutation_proba_min))
+        for c in population:
+            p = rd.random()
+            if p < mutation_proba:
+                if n_stagnancy > 10:
+                    increase_factor = min((n_stagnancy - 10), 10)
+                else:
+                    increase_factor = 1
+                if timings:
+                    start_m = timer()
+                    impr = True
+                    v = c.compute_value()
+                    while impr: 
+                        c = mutation(c, increase_factor)
+                        n_mutation += 1
+                        impr = (c.compute_value() < v - 0.001)
+                        v = c.compute_value()
+                    t_m += timer() - start_m
+                else:
+                    impr = True
+                    v = c.compute_value()
+                    while impr: 
+                        c = mutation(c, increase_factor)
+                        impr = (c.compute_value() < v - 0.001)
+                        v = c.compute_value()
+
         values_pop = [s.compute_value() for s in population]
         best_actual = min(values_pop)
         if best_actual < best:
@@ -57,28 +85,6 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
             n_stagnancy = 0
         else:
             n_stagnancy += 1
-        mutation_proba = min(mutation_proba_max, mutation_proba_min + (n_stagnancy / 10) * (mutation_proba_max - mutation_proba_min))
-        for c in population:
-            p = rd.random()
-            if p < mutation_proba:
-                if n_stagnancy > 10:
-                    increase_factor = min((n_stagnancy - 10), 10)
-                else:
-                    increase_factor = 1
-                if timings:
-                    start_m = timer()
-                    impr = True
-                    v = c.value.copy()
-                    while impr: 
-                        c = mutation(c, increase_factor)
-                        n_mutation += 1
-                        impr = (c.value < v)
-                        v = c.value
-                    t_m += timer() - start_m
-                    
-                else:
-                    c = mutation(c, increase_factor)
-
 
         values_pop = [s.compute_value() for s in population]
         # print('minimum value...')
