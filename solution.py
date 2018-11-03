@@ -152,8 +152,8 @@ class Solution():
     def copy(self):
         """ Create a copy of the solution
         """
-    	s = Solution(self.n, self.sensors.copy())
-    	return s
+        s = Solution(self.n, self.sensors.copy())
+        return s
 
     def add_sensor(self, i):
         """ add a sensor and update the value
