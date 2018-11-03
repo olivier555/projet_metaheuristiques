@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct 21 15:34:13 2018
-
-@author: olivi
+Class that used matplotlib to visualize the data and the solutions.
 """
 
 import matplotlib.pyplot as plt
@@ -14,10 +12,14 @@ class Visualizator:
         self.solution = solution
 
     def print_sensors(self):
+        """ Draw all the targets and the sensors.
+        """
         self.print_targets()
         plt.show()
 
     def print_sensors_com(self):
+        """ Draw all the targets, the sensors and the communication link between them.
+        """
         for i in range(len(self.data.points)):
             if self.solution.sensors[i] or i == 0:
                 for j in self.data.get_neighbours_com(i):
@@ -31,6 +33,8 @@ class Visualizator:
         plt.show()
 
     def print_sensors_sens(self):
+        """ Draw all the targets, the sensors and the detection link between them.
+        """
         for i in range(len(self.data.points)):
             if self.solution.sensors[i]:
                 for j in self.data.get_neighbours_sens(i):
@@ -45,6 +49,8 @@ class Visualizator:
         plt.show()
 
     def print_targets(self):
+        """ Draw targets and sensors of the solution.
+        """
         sensors_x = [self.data.points[i][1] for i in range(len(self.data.points))
                                             if self.solution.sensors[i] and i != 0]
         sensors_y = [self.data.points[i][2] for i in range(len(self.data.points))
