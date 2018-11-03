@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct 21 17:47:49 2018
-
-@author: olivi
+Class to find a lower bound of the problem
 """
 
 from scipy import optimize
@@ -13,6 +11,9 @@ class LowerBoundFounder:
         self.data = data
 
     def find_lower_bound(self):
+        """ Compute the optimal value of the relaxed dual problem
+        for the problem without communication constraints
+        """
         size = self.data.get_size()
         result = optimize.linprog(c = [- 1] * size,
                                       A_ub = self.data.get_matrix_sens(),

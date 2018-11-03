@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Oct 22 22:03:45 2018
-
-@author: olivi
+Function to remove useless sensors of a solution
 """
 
 import numpy as np
 
-# class LocalSearch:
-
 def remove_targets(solution, data):
+    """ remove sensors that are useless for the solution.
+    <!> solution must be eligible
+    """
     M = data.get_matrix_sens()
     nb_sens = np.matmul(M, solution.sensors.astype(int)) >= 2
     sensors = solution.get_index_sensors()
