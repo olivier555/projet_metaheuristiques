@@ -9,7 +9,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
     t = 0
     n = len(population)
     i = 1
-    values_pop = [s.value for s in population]
+    values_pop = [s.compute_value() for s in population]
     best_sol = population[np.argmin(values_pop)]
     best = best_sol.value
     n_stagnancy = 10
@@ -60,6 +60,10 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
         best_actual = min(values_pop)
         if best_actual < best:
             best_sol = population[np.argmin(values_pop)]
+            if np.argmin(values_pop) >= n_parents:
+                print('better solution after a fusion')
+            else:
+                print('better solution in the parents')
             best = best_actual
             n_stagnancy = 0
         else:
@@ -68,13 +72,25 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
         for c in population:
             p = rd.random()
             if p < mutation_proba:
+                if n_stagnancy > 10:
+                    increase_factor = min((n_stagnancy - 10), 10)
+                else:
+                    increase_factor = 1
                 if timings:
                     start_m = timer()
-                    c = mutation(c)
+                    impr = True
+                    v = c.value.copy()
+                    while impr: 
+                        c = mutation(c, increase_factor)
+                        n_mutation += 1
+                        impr = (c.value < v)
+                        if impr:
+                            print('impr')
+                        v = c.value
                     t_m += timer() - start_m
-                    n_mutation += 1
+                    
                 else:
-                    c = mutation(c)
+                    c = mutation(c, increase_factor)
 
 
         values_pop = [s.compute_value() for s in population]
@@ -94,7 +110,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
 
 
 
-def mutation_1(s,data, switch, search_two, p_ajout = 0.5):
+def mutation_1(s,data, switch, search_two, increase_factor = 1, p_ajout = 0.5):
     while rd.random() < p_ajout:
         i = rd.randint(0, s.get_size()-1)
         s.add_sensor(i)
@@ -106,9 +122,9 @@ def mutation_1(s,data, switch, search_two, p_ajout = 0.5):
     # remove_targets(s, data)
     # assert s.eligible(data)
     # search_two = SearchTwoToOne(data)
-    j = rd.randint(1,int(s.value/5))
-    switch.switch_sensors(s,5,j)#int(s.value/10))
-    search_two.search(s, 10, 30)
+    j = rd.randint(1,int(s.compute_value()/5))
+    switch.switch_sensors(s,5,j*increase_factor)#int(s.compute_value()/10))
+    search_two.search(s, 10*increase_factor, 30)
 
     remove_targets(s,data)
     # assert s.eligible(data)
@@ -122,8 +138,8 @@ if __name__ == '__main__':
     from initial_path_finder import PathFinder
     from switch import Switch
 
-    # data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
-    data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
+    data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
+    # data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
     n_population = 50
     population = []
 
@@ -144,8 +160,8 @@ if __name__ == '__main__':
     print(min(values_pop))
 
     search_two = SearchTwoToOne(data)
-    def mutation(s):
-        return mutation_1(s, data, switch, search_two)
+    def mutation(s, increase_factor):
+        return mutation_1(s, data, switch, search_two, increase_factor)
 
     f = Fusion(data)
     def fusion(s_1,s_2):
@@ -162,6 +178,8 @@ if __name__ == '__main__':
     switch.switch_sensors(best_solution, 100, 100)
     search_two.search(best_solution, 100, 20)
     print(best_solution.value)
+
+    assert(best_solution.eligible(data))
 
 
 

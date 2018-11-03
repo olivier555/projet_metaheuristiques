@@ -37,8 +37,8 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
     switch = Switch(data)
     search_two = SearchTwoToOne(data)
     fusioner = Fusion(data)
-    def mutation(s):
-        return mutation_1(s, data, switch, search_two)
+    def mutation(s, increase_factor):
+        return mutation_1(s, data, switch, search_two, increase_factor)
     def fusion(s_1,s_2):
         p = rd.random()
         if p < 0.33:
@@ -54,11 +54,11 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
 
 if __name__ == '__main__':
 
-    # data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
-    data = Data(r_com = 1, r_sens = 1, nb_rows = 9, nb_columns = 9)
-    nb_population = 20
+    data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
+    # data = Data(r_com = 1, r_sens = 1, nb_rows = 9, nb_columns = 9)
+    nb_population = 30
     nb_iter_max = 1000
-    t_max = 20
+    t_max = 300
     p_mutation_min = 0.3
     p_mutation_max = 0.6
     prop_children_kept = 0.8
