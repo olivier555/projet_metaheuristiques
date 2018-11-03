@@ -13,8 +13,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
     best_sol = population[np.argmin(values_pop)]
     best = best_sol.value
     n_stagnancy = 10
-    while i < n_iter and t < t_max:
-        # print('')
+    while i <= n_iter and t < t_max:
         print("genetic iteration :", i)
         np.random.shuffle(population)
         list_childrens = []
@@ -33,16 +32,6 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
             else:
                 childrens = fusion(population[2*j],population[2*j+1])
 
-            # for c in childrens:
-            #     p = rd.random()
-                # assert(childrens[k].eligible(data))
-                # if p < mutation_proba:
-                #     start_m = timer()
-                #     c = mutation(c)
-                #     t_m += timer() - start_m
-                    # print('mutation done')
-                # assert(childrens[k].eligible(data))
-            # childrens is a list of two doable solutions 
             list_childrens += childrens
             list_childrens_value += [c.compute_value() for c in childrens]
         index_best_childrens = np.argsort(list_childrens_value)
@@ -104,7 +93,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
         # print('time fusion :',t_f)
         # print('time mutation :', t_m)
     if timings :
-        return [population,best_sol, n_fusion, n_mutation, t_f, t_m]
+        return [population,best_sol, n_fusion, n_mutation, t_f, t_m, i]
     else:
         return[population,best_sol]
 

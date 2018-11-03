@@ -100,7 +100,7 @@ for n in size_instance :
 		# else:
 		t_remove_targets_two[(n,r_com,r_sens)] = (timer() - start)/n_population
 
-		[population,best_solution, n_fusion, n_mutation, t_f, t_m] = genetic(solutions, data, mutation, fusion, n_iter = 30, t_max = 120, timings = True)
+		[population,best_solution, n_fusion, n_mutation, t_f, t_m, n_iter] = genetic(solutions, data, mutation, fusion, n_iter = 30, t_max = 120, timings = True)
 
 
 		# if (n,r_com, r_sens) in number_fusion:
