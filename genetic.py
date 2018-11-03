@@ -73,8 +73,6 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
                         c = mutation(c, increase_factor)
                         n_mutation += 1
                         impr = (c.value < v)
-                        if impr:
-                            print('impr')
                         v = c.value
                     t_m += timer() - start_m
                     
