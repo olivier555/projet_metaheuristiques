@@ -82,43 +82,49 @@ def size_population(n, r_com, r_sens, T, T_ini, n_iterations, p_m, df):
 
 
 if __name__ == '__main__':
-	p_mutation_min = 0.1
-	p_mutation_max = 0.7
-	n_iter = 50
+	p_mutation_min = 0.2
+	p_mutation_max = 0.6
+	n_iter = 100
 	p_m = (11*p_mutation_min + 6.5*(p_mutation_max-p_mutation_min) + p_mutation_max*(n_iter - 10))/n_iter
 	print(p_m)
+	T = 60
+	T_ini = 10
+
 	df = clean_df('timings.csv')
 	df.drop(df[df['n'] == 400].index, inplace = True)
-	n_pop = size_population(400,r_com = 2, r_sens = 1,T = 120,T_ini = 20, n_iterations = n_iter, p_m =  p_m, df = df)
+	n_pop = size_population(400,r_com = 2, r_sens = 1,T = T,T_ini = T_ini, n_iterations = n_iter, p_m =  p_m, df = df)
 	print('population of size : ',n_pop)
 	data = Data(r_com = 2, r_sens = 1, file_name = 'Instances/captANOR400_10_80.dat')
 	start = timer() 	
-	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = 100, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	print(b.compute_value())
 	print('time needed :',timer() - start)
 	# print(size_population(1510,1,1,T = 500, T_ini = 100, n_iterations = 5, p_m = 0.5, df = df))
 
 	print('')
-	n_iter = 20
+	n_iter = 100
 	p_m = (11*p_mutation_min + 6.5*(p_mutation_max-p_mutation_min) + p_mutation_max*(n_iter - 10))/n_iter
 	print(p_m)
 	df = clean_df('timings.csv')
 	df.drop(df[df['n'] == 625].index, inplace = True)
-	n_pop = size_population(625,r_com = 3, r_sens = 2,T = 120,T_ini = 20, n_iterations = n_iter, p_m =  p_m, df = df)
+	n_pop = size_population(625,r_com = 3, r_sens = 2,T = T,T_ini = T_ini, n_iterations = n_iter, p_m =  p_m, df = df)
 	print('population of size : ',n_pop)
 	data = Data(r_com = 3, r_sens = 2, file_name = 'Instances/captANOR625_15_100.dat')
 	start = timer() 	
-	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = 100, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	print(b.compute_value())
 	print('time needed :',timer() - start)
 
 	print('')
-	n_iter = 10
+	n_iter = 100
 	p_m = (11*p_mutation_min + 6.5*(p_mutation_max-p_mutation_min) + p_mutation_max*(n_iter - 10))/n_iter
 	print(p_m)
 	df = clean_df('timings.csv')
 	df.drop(df[df['n'] == 900].index, inplace = True)
-	n_pop = size_population(900,r_com = 2, r_sens = 2,T = 120,T_ini = 20, n_iterations = n_iter, p_m =  p_m, df = df)
+	n_pop = size_population(900,r_com = 2, r_sens = 2,T = T,T_ini = T_ini, n_iterations = n_iter, p_m =  p_m, df = df)
 	print('population of size : ',n_pop)
 	data = Data(r_com = 2, r_sens = 2, file_name = 'Instances/captANOR900_15_20.dat')
 	start = timer() 	
-	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = 100, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	print(b.compute_value())
 	print('time needed :',timer() - start)

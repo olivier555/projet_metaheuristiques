@@ -46,6 +46,19 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
         population = [population[index_best_parents[i]] for i in range(n_parents)]
         population += [list_childrens[index_best_childrens[i]] for i in range(n_childrens)]
         
+        values_pop = [s.compute_value() for s in population]
+        best_actual = min(population[0].value,population[n_parents].value)
+        if best_actual < best:
+            if population[0].value < population[n_parents].value:
+                best_sol = population[0].copy()
+                print('better solution in the parents')
+            else:
+                best_sol = population[n_parents].copy()
+                print('better solution after a fusion')
+            best = best_actual
+            n_stagnancy = 0
+        else:
+            n_stagnancy += 1
         
         mutation_proba = min(mutation_proba_max, mutation_proba_min + (n_stagnancy / 10) * (mutation_proba_max - mutation_proba_min))
         for c in population:
@@ -73,20 +86,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
                         impr = (c.compute_value() < v - 0.001)
                         v = c.compute_value()
 
-        values_pop = [s.compute_value() for s in population]
-        best_actual = min(values_pop)
-        if best_actual < best:
-            best_sol = population[np.argmin(values_pop)]
-            if np.argmin(values_pop) >= n_parents:
-                print('better solution after a fusion')
-            else:
-                print('better solution in the parents')
-            best = best_actual
-            n_stagnancy = 0
-        else:
-            n_stagnancy += 1
 
-        values_pop = [s.compute_value() for s in population]
         # print('minimum value...')
         print(min(values_pop))
         t = timer() - start
@@ -96,6 +96,11 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
 
         # print('time fusion :',t_f)
         # print('time mutation :', t_m)
+
+    values_pop = [s.compute_value() for s in population]
+    if min(values_pop) < best: #improvement in the last mutations
+        best = min(vaues_pop)
+        best_sol = population[np.argmin(values_pop)].copy()
     if timings :
         return [population,best_sol, n_fusion, n_mutation, t_f, t_m, i]
     else:
@@ -133,7 +138,7 @@ if __name__ == '__main__':
 
     data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
     # data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
-    n_population = 50
+    n_population = 10
     population = []
 
     switch = Switch(data)
@@ -165,7 +170,7 @@ if __name__ == '__main__':
             return f.fusion_horizontal_childrens(s_1,s_2)
 
 
-    [population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 10000, t_max  = 300)
+    [population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 100, t_max  = 30)
     
     print(best_solution.value)
     switch.switch_sensors(best_solution, 100, 100)

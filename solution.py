@@ -113,6 +113,10 @@ class Solution():
     def get_size(self):
         return self.n
 
+    def copy(self):
+    	s = Solution(self.n, self.sensors.copy())
+    	return s
+
     def add_sensor(self,i):
         if not self.sensors[i]:
             self.sensors[i] = True
@@ -297,6 +301,7 @@ if __name__ == '__main__':
         b[i] = True
     s = Solution(n,b)
     print(s.compute_value())
+    print(s.copy())
     start = timer()
     (M_numbers, M_list) = s.min_number_capt_to_add(d)
     print(timer() - start)
