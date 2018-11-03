@@ -34,6 +34,7 @@ def treat_best_solution(solution, data, switch, search_two):
     search_two.search(solution, solution.value, solution.value)
 
 def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept):
+    start = timer()
     switch = Switch(data)
     search_two = SearchTwoToOne(data)
     fusioner = Fusion(data)
@@ -48,7 +49,8 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
         else:
             return fusioner.fusion_diag_childrens(s_1, s_2)
     initial_population = create_initial_population(data, nb_population, switch)
-    [population,best_solution] = genetic(initial_population, data, mutation, fusion, nb_iter_max, p_mutation_min, p_mutation_max, prop_children_kept, t_max)
+    assert(t_max - (timer() - start) > 0)
+    [population,best_solution] = genetic(initial_population, data, mutation, fusion, nb_iter_max, p_mutation_min, p_mutation_max, prop_children_kept, t_max - (timer() - start))
     treat_best_solution(best_solution, data, switch, search_two)
     return best_solution
 
