@@ -50,8 +50,8 @@ for n in size_instance :
 		search_two = SearchTwoToOne(data)
 
 
-		def mutation(s):
-			return mutation_1(s, data, switch, search_two)
+		def mutation(s, increase_factor):
+			return mutation_1(s, data, switch, search_two, increase_factor)
 		def fusion(s_1,s_2):
 			p = rd.random()
 			if p < 0.33:
