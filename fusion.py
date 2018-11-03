@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Oct 23 08:48:28 2018
-
-@author: olivi
+Class that computes the fusion of 2 solution.
+It also contains a method to restore a non eligible children.
 """
 
 import numpy as np
@@ -72,6 +71,7 @@ class Fusion:
         """ We try to make s eligible.
         We add all the sensors that are at most r_com of the cut index i
         on the cut direction of index_sorted.
+        After that, we remove all useless sensors with remove_targets
         """
         if direction == 1:
             center_value = self.points_sorted_x[i][1]
