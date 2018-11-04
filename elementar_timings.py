@@ -5,12 +5,12 @@ from switch import Switch
 from search_two_to_one import SearchTwoToOne
 from optimize import *
 import pandas as pd
-# print(os.path.dirname(sys.argv[0]))
+
+
+# This script computes the elementar timings for the instances given in the folder 'Instances/'
+
 list_data = os.listdir('Instances/')
-
 list_data = [i for i in list_data if i[0:4] == 'capt']
-# print(list_data)
-
 d = {}
 
 d[1500] = 'captANOR1500_21_500.dat'# 'captANOR1500_15_100.dat']
@@ -21,20 +21,24 @@ d[625] = 'captANOR625_15_100.dat'
 
 size_instance = [225,400,625,900,1500]
 
+# We use dictionnaries for the elementar timings
+# Mean time to create a solution with path_finder
 t_path_finder = {}
+# Mean time to remove targets of a solution created by path_finder
 t_remove_targets_ini = {}
+# Mean time to do the switch for an initial solution after path_finder and remove_targets_ini
 t_switch_ini = {}
+# Mean time to try to remove target again after the swithc for an initial solution
 t_remove_targets_two = {}
+# Mean time needed for one mutation
 t_mutation = {}
+# Mena time needed for one fusion
 t_fusion = {}
 number_mutation = {}
 number_fusion = {}
 list_r = [(1,1), (2,1),(2,2),(3,2)]
 n_population = 50
-# nb_switch = [2*i for i in range(1,30)]
 
-
-#timing of the initial path_finder
 for n in size_instance :
 	f = d[n]
 	for (r_com,r_sens) in list_r:
@@ -65,19 +69,12 @@ for n in size_instance :
 		start = timer()
 		for i in range(n_population):
 			solutions.append(path_finder.create_path())
-		# if (n,r_com,r_sens) in t_path_finder:
-		# 	t_path_finder[(n,r_com,r_sens)].append((timer() - start)/n_population)
-		# else :
 		t_path_finder[(n,r_com,r_sens)] = (timer() - start)/n_population
 
 		#timing of the first remove_targets function
 		start = timer()
 		for s in solutions:
 			remove_targets(s,data)
-
-		# if (n,r_com, r_sens) in t_remove_targets_ini:
-		# 	t_remove_targets_ini[(n,r_com,r_sens)].append((timer() - start)/n_population)
-		# else:
 		t_remove_targets_ini[(n,r_com,r_sens)] = (timer() - start)/n_population
 
 		#timing of the switch_function after the initial path_finder
@@ -85,67 +82,34 @@ for n in size_instance :
 		for s in solutions:
 			j = rd.randint(0,5 * int(s.value))
 			switch.switch_sensors(s, 5, j)
-		# if (n,r_com, r_sens) in t_switch_ini:
-		# 	t_switch_ini[(n,r_com,r_sens)].append((timer() - start)/n_population)
-		# else:
 		t_switch_ini[(n,r_com,r_sens)] = (timer() - start)/n_population
 
 		#timing of the first remove_targets function
 		start = timer()
 		for s in solutions:
 			remove_targets(s,data)
-
-		# if (n,r_com, r_sens) in t_remove_targets_two:
-		# 	t_remove_targets_two[(n,r_com,r_sens)].append((timer() - start)/n_population)
-		# else:
 		t_remove_targets_two[(n,r_com,r_sens)] = (timer() - start)/n_population
 
 		[population,best_solution, n_fusion, n_mutation, t_f, t_m, n_iter] = genetic(solutions, data, mutation, fusion, n_iter = 30, t_max = 120, timings = True)
 
-
-		# if (n,r_com, r_sens) in number_fusion:
-		# 	number_fusion[(n,r_com,r_sens)].append(n_fusion)
-		# else:
 		number_fusion[(n,r_com,r_sens)] = n_fusion
-		# if (n,r_com, r_sens) in number_mutation:
-		# 	number_mutation[(n,r_com,r_sens)].append(n_mutation)
-		# else:
 		number_mutation[(n,r_com,r_sens)] = n_mutation
 
-		# if (n,r_com,r_sens) in t_fusion :
-		# 	if n_fusion > 0:
-		# 		t_fusion[(n,r_com,r_sens)].append(t_f/n_fusion)
-		# 	else:
-		# 		t_fusion[(n,r_com,r_sens)].append(None)
-
-		# else:
+		# update the mean duration of a fusion
 		if n_fusion > 0:
 			t_fusion[(n,r_com,r_sens)] = t_f/n_fusion
 		else:
 			t_fusion[(n,r_com,r_sens)] = None
 
-		# if (n,r_com,r_sens) in t_mutation:
-		# 	if n_mutation > 0:
-		# 		t_mutation[(n,r_com,r_sens)].append(t_m/n_mutation)
-		# 	else:
-		# 		t_mutation[(n,r_com,r_sens)].append(None)
-		# else:
+		# update the mean duration of a mutation
 		if n_mutation > 0:
 			t_mutation[(n,r_com,r_sens)] = t_m/n_mutation
 		else :
 			t_mutation[(n,r_com,r_sens)] = None
 
 
-
-# print(t_mutation)
-# print(t_fusion)
-# print(number_mutation)
-# print(number_fusion)
-# print(t_remove_targets_ini)
-# print(t_path_finder)
-# print(t_switch_ini)
-
-
+# save everything in a pandas dataframe and then in a csv file
+NAME_CSV = 'timings.csv' 
 df = pd.DataFrame.from_dict(t_mutation, orient='index', columns = ['t_mutation'])
 df.index.name = 'n,r_com,r_sens'
 df['t_fusion'] = pd.Series(t_fusion)
@@ -155,4 +119,4 @@ df['t_remove_targets_ini'] = pd.Series(t_remove_targets_ini)
 df['t_path_finder'] = pd.Series(t_path_finder)
 df['t_switch_ini'] = pd.Series(t_switch_ini)
 df['t_remove_targets_two'] = pd.Series(t_remove_targets_two)
-df.to_csv('timings.csv')
+df.to_csv(NAME_CSV)
