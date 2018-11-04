@@ -33,14 +33,15 @@ def clean_df(filename):
 	df.drop('n,r_com,r_sens', axis = 1, inplace = True)
 	return df
 
-# this function computes the size of the population to use the metaheuristic
-# with less tant T_ini seconds to compute the initial population and less than T seconds
-# for the entire metaheuristic with at least n_iterations iterations, and a probability of 
-# mutation p_m
-# The datas are n points, and radiuses (r_com, r_sens) for communication and detection
-# We also use the dataframe df with our previous computations of the elementar timings 
+
 def size_population(n, r_com, r_sens, T, T_ini, n_iterations, p_m, df):
-	# linear interpolation to get t_f, t_m, and t_c
+	""" this function computes the size of the population to use the metaheuristic
+	 with less tant T_ini seconds to compute the initial population and less than T seconds
+	 for the entire metaheuristic with at least n_iterations iterations, and a probability of 
+	 mutation p_m
+	 The datas are n points, and radiuses (r_com, r_sens) for communication and detection
+	 We also use the dataframe df with our previous computations of the elementar timings
+	 linear interpolation to get t_f, t_m, and t_c  """
 	df_c = df[np.logical_and(df['r_com'] == r_com, df['r_sens'] == r_sens)].copy()
 	values_n = list(sorted(df_c['n'].values))
 	assert(len(values_n) == len(set(values_n)))
@@ -82,9 +83,12 @@ def size_population(n, r_com, r_sens, T, T_ini, n_iterations, p_m, df):
 
 
 if __name__ == '__main__':
+
+	# different test of this functions
 	p_mutation_min = 0.2
 	p_mutation_max = 0.6
 	n_iter = 100
+	# worst case mean number of probability of mutation
 	p_m = (11*p_mutation_min + 6.5*(p_mutation_max-p_mutation_min) + p_mutation_max*(n_iter - 10))/n_iter
 	print(p_m)
 	T = 60
@@ -96,7 +100,7 @@ if __name__ == '__main__':
 	print('population of size : ',n_pop)
 	data = Data(r_com = 2, r_sens = 1, file_name = 'Instances/captANOR400_10_80.dat')
 	start = timer() 	
-	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8, stagnancy_max = 30)
 	print(b.compute_value())
 	print('time needed :',timer() - start)
 	# print(size_population(1510,1,1,T = 500, T_ini = 100, n_iterations = 5, p_m = 0.5, df = df))
@@ -111,7 +115,7 @@ if __name__ == '__main__':
 	print('population of size : ',n_pop)
 	data = Data(r_com = 3, r_sens = 2, file_name = 'Instances/captANOR625_15_100.dat')
 	start = timer() 	
-	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8, stagnancy_max = 30)
 	print(b.compute_value())
 	print('time needed :',timer() - start)
 
@@ -125,6 +129,6 @@ if __name__ == '__main__':
 	print('population of size : ',n_pop)
 	data = Data(r_com = 2, r_sens = 2, file_name = 'Instances/captANOR900_15_20.dat')
 	start = timer() 	
-	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8)
+	b = optimize(data, n_pop, nb_iter_max = float('inf'), t_max = T, p_mutation_min = p_mutation_min, p_mutation_max = p_mutation_max, prop_children_kept = 0.8, stagnancy_max = 30)
 	print(b.compute_value())
 	print('time needed :',timer() - start)
