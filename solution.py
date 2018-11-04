@@ -179,7 +179,13 @@ class Solution():
         """
         return list(np.where(self.sensors)[0])
 
+
+############ the three following functions are not used anymore, because they are time consuming. #############################
+    # There were trying to restore the connectivity constraint.
+
     def min_number_capt_to_add(self,data):
+        """ compute the minimum targets to add between two points to make them connected targets
+        """
         index_sensors = self.get_index_sensors()
 
         M_list = [[None for j in range(self.n)] for i in range(self.n)]
@@ -203,7 +209,7 @@ class Solution():
                 M_list[i][i] = [i]
             M_numbers[i][i] = d
             n = set([i])
-            # descente i
+            # firts research
             already_visited = set([i])
             n = set(neighbours[i]) - set(index_sensors)
             l = set(neighbours[i]).intersection(set(index_sensors)) - already_visited
@@ -219,7 +225,7 @@ class Solution():
                 M_list[j][i] = []#[j]
             already_visited = already_visited.union(l)
             already_visited = already_visited.union(n)
-
+            #depth first research
             while len(l) > 0:
                 l2 = set()
                 for j in l:
@@ -281,6 +287,8 @@ class Solution():
 
 
     def greedy_reparation_com(self,data, M_numbers, M_list):
+        """ greedy method to fix the connectivity constraint given matrix calculated before
+        """
         M_list = [[set(i) for i in j]for j in M_list]
         reached = self.reached(data)
         sensors = self.get_index_sensors()
@@ -305,7 +313,8 @@ class Solution():
             reached = self.reached(data)
 
     def kruskal_reparation_com(self,data, M_list, M_numbers):
-        
+        """ kruskal use of a minimum spanning tree to fix the connectivity constraint given matrix calculated in self.min_number_capt_to_add
+        """
         if self.is_sensor(0):
             size_g = self.value
             sensors = self.get_index_sensors()
@@ -315,8 +324,6 @@ class Solution():
         adj = np.ones((size_g,size_g),dtype = 'bool')
         for i in range(size_g):
             adj[i][i] = False
-        # adj.shape
-        # np.array([[M_numbers[i][j] for i in sensors] for j in sensors]).shape)
         g = Graph(size_g,adjacency = adj,edges_value = np.array([[M_numbers[i][j] for i in sensors] for j in sensors]))
         (adj, ev) = g.kruskal()
         for i in range(size_g):
@@ -336,7 +343,8 @@ if __name__ == '__main__':
     from data import *
     from timeit import default_timer as timer
 
-    nb_rows = nb_columns = 15
+    # test of the solution class
+    nb_rows = nb_columns = 10
     r_com = 1
     r_sens = 1
     n = nb_columns*nb_rows
@@ -349,9 +357,10 @@ if __name__ == '__main__':
     print(s.compute_value())
     print(s.copy())
     start = timer()
+
+    # test of the reparation methods
     (M_numbers, M_list) = s.min_number_capt_to_add(d)
     print(timer() - start)
-
     s2 = s
     start = timer()
     s2.greedy_reparation_com(d, M_numbers, M_list)

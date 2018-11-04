@@ -1,6 +1,8 @@
 import numpy as np
 
 def greedy_solution_sens(data):
+	""" this funcion is used to create a solution for the detection constraint (but not the communication)
+	it's greedy because we try to add the target with the bigger number of undetected neighbours. """ 
 	n = data.get_size()
 	nb_neighbours = np.zeros(n)
 	sensors = set()

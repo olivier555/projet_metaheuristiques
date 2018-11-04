@@ -8,9 +8,16 @@ class Graph():
 	# if edges_values != None we iniate the graph with values on the edges.
 	# edges_values_dic and edges_values_matrix are boolean to kwon if we save the values
 	# in a matrix or in a dictionnary
+
+	# if adjacency is None we compute it from edges_values but we need to make sure tha edges_value is not None
+
+	# triangular_sup is a boolean to say that the graph is not oriented and that the adjacency matrix can be computed by taking in argument only the upper
+	# part of the given adjacency matrix
+
+	#  edges_value_matrix and edges_value_dic are two booleans to say if we want to save the edges values in a matrix or in a dictionnary 
 	def __init__(self,n,adjacency = None, oriented = False, triangular_sup = False, edges_value=None, edges_value_matrix = True, edges_value_dic = True):
 		self.n = n
-
+		# adajacency and edges_value can't be both None to initiate the graph
 		assert (adjacency is not None) or (edges_value is not None)
 
 		if triangular_sup :
@@ -19,6 +26,7 @@ class Graph():
 			adjacency = adjacency + adjacency.T
 			assert not(oriented)
 		self.oriented = oriented
+		
 		if edges_value is None:
 			self.value = False # there are no values (or capacities) on the edges
 			self.adjacency = (adjacency != 0)
@@ -28,18 +36,22 @@ class Graph():
 			self.value = True
 			self.edges_value_matrix = edges_value_matrix
 			self.edges_value_dic = edges_value_dic
+			# save the value of edges_value 
 			self.save_edges_values(adjacency,edges_value)
 		
 		assert self.adjacency.shape == (n,n), "adjacency matrix size doesn't fit the number of vertex"
 		assert oriented or np.allclose(self.adjacency, self.adjacency.T),"matrix of adjacency is not triangular but oriented = False"
 		
+		#dictionnary of neighbours for each vertex
 		self.neighbours = {}
 		for i in range(self.n):
 			self.neighbours[i] = list(np.where(self.adjacency[i])[0])
 		self.m = sum(sum(self.adjacency))/(1 + oriented)
 		
-
-	
+	# this function save the value in edges_value.
+	# edges_value argument can be an array or a dictionnary.
+	# if self.edges_value_matrix is true we save this in a dictionnary
+	# if self.edges_value_di is true we save those value in a dictionnary
 	def save_edges_values(self, adjacency, edges_value):
 		if isinstance(adjacency,np.ndarray):
 			self.adjacency = adjacency
@@ -48,7 +60,7 @@ class Graph():
 		else:
 			adjacency_already_built = False
 		#booleans to know if we want to save the matrix or the dictionnary
-		assert self.edges_value_matrix or self.edges_value_dic, "we need to save the value on the edges"
+		assert self.edges_value_matrix or self.edges_value_dic, "we need to save the value on the edges somewhere"
 		
 		if isinstance(edges_value,dict):
 			if self.edges_value_dic :
@@ -92,6 +104,7 @@ class Graph():
 	def get_neighbours(self,i):
 		return self.neighbours[i]
 
+	# test if the graph is bipartite
 	def is_bipartite(self):
 		left = set([0])
 		right = set()
@@ -130,6 +143,7 @@ class Graph():
 	def get_size(self):
 		return self.n
 
+	#kruskal algorithm to to compute the minimum spanning tree in a graph
 	def kruskal(self):
 		assert not(self.oriented)
 		list_value_edges = []
@@ -183,7 +197,7 @@ class Graph():
 
 
 
-
+# some tests of the graph class
 if __name__ == '__main__':
 	g = Graph(5,None,oriented = False, triangular_sup = False,edges_value = {(1,2):3,(2,1):3})
 	print(g.get_neighbours(3))
