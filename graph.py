@@ -84,6 +84,8 @@ class Graph():
 			assert isinstance(self.adjacency,np.ndarray) and self.adjacency.shape == (self.n,self.n), "adjacency is not a square matrix of size n"
 			if self.edges_value_matrix :
 				self.edges_value_m = edges_value
+			else:
+				self.edges_value_m = None
 			if self.edges_value_dic :
 				self.edges_value_d = {}
 				for i in range(self.n):
@@ -91,13 +93,13 @@ class Graph():
 						if self.adjacency[i][j]:
 							self.edges_value_d[(i,j)] = edges_value[i][j]
 							self.edges_value_d[(j,i)] = edges_value[j][i]
+			else:
+				self.edges_value_d = None
 		if self.edges_value_matrix:
 			assert self.oriented or np.allclose(self.edges_value_m, self.edges_value_m.T, atol = 1e-8),"matrix edges_value is not symmetric but oriented = False"
-		if isinstance(self.edges_value_m,np.ndarray):
-			assert self.oriented or np.allclose(self.edges_value_m, self.edges_value_m.T, atol = 1e-8),"matrix edges_value is not symmetric but oriented = False"
-		else:
+		if not(self.oriented) and self.edges_value_dic:
 			for (i,j) in self.edges_value_d.keys():
-				assert self.oriented or j<=i or self.edges_value_d[(i,j)] == self.edges_value_d[(i,j)], "edges_value dictionnary is not symmetric"
+				assert j<=i or self.edges_value_d[(i,j)] == self.edges_value_d[(i,j)], "edges_value dictionnary is not symmetric"
 
 
 
