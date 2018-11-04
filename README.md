@@ -1,4 +1,4 @@
-# Algorithme génétique pour le problème de couvertur connexe minimum dans les réseaux de capteurs
+# Algorithme génétique pour le problème de couverture connexe minimum dans les réseaux de capteurs
 
 
 
@@ -49,7 +49,7 @@ optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max
 * lower_bound_founder: classe permettant de calculer une borne inférieure au problème
 * optimize: fonction pour lancer l'heuristique complète. Le fichier contient également les fonctions permettant de créer la population initiale et le post-traitement pour la meilleure solution.
 * plot_timings: affichage des temps élémentaires en fonction de la taille des instances
-* reparation: fonctions de reparation de la contrainte de communication (plus utilisées)
+* reparation: fonctions de reparation de la contrainte de communication (inutilisables sur des instances trop grandes)
 * search_two_to_one: classe permettant de remplacer des couples de capteurs par un seul capteur dans une solution
 * solution: classe contenant la structure d'une solution et les tests permettant de savoir si elle est réalisable.
 * switch: classe permettant de déplacer les capteurs d'une solution
