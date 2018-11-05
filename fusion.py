@@ -12,13 +12,17 @@ from local_search import remove_targets
 class Fusion:
 
     def __init__(self, data):
-        """ Compute and sort the projection on the straight lines (0, 1), (1, 0) and (0.95, 1).
+        """ Compute and sort the projection on the straight lines (0.05, 1), (1, 0.05) and (0.95, 1).
         We also create a list of the index of the points sorted according to the previous projections.
         """
         self.data = data
-        self.points_sorted_x = sorted(data.points, key=lambda x: x[1])
+        self.projection_x = [(0.05 * x[2] + x[1]) / (1 + 0.05 ** 2) for x in data.points]
+        self.projection_x.sort()
+        self.points_sorted_x = sorted(data.points, key=lambda x: (0.05 * x[2] + x[1]) / (1 + 0.05 ** 2))
         self.index_sorted_x = np.array([self.points_sorted_x.index(v) for v in data.points], int)
-        self.points_sorted_y = sorted(data.points, key=lambda x: x[2])
+        self.projection_y = [(0.05 * x[1] + x[2]) / (1 + 0.05 ** 2) for x in data.points]
+        self.projection_y.sort()
+        self.points_sorted_y = sorted(data.points, key=lambda x: (0.05 * x[1] + x[2]) / (1 + 0.05 ** 2))
         self.index_sorted_y = np.array([self.points_sorted_y.index(v) for v in data.points], int)
         self.projection_diag = [(0.95 * x[2] + x[1]) / (1 + 0.95 ** 2) for x in data.points]
         self.projection_diag.sort()
@@ -74,9 +78,9 @@ class Fusion:
         After that, we remove all useless sensors with remove_targets
         """
         if direction == 1:
-            center_value = self.points_sorted_x[i][1]
+            center_value = self.projection_x[i]
         elif direction == 2:
-            center_value = self.points_sorted_y[i][2]
+            center_value = self.projection_y[i]
         else:
             center_value = self.projection_diag[i]
 
@@ -88,10 +92,10 @@ class Fusion:
             add_direction = True
             while add_direction and j < self.n and j > 0:
                 if direction == 1:
-                    add_direction = abs(self.points_sorted_x[j][1]- center_value) < r
+                    add_direction = abs(self.projection_x[j] - center_value) < r
                     ind = self.points_sorted_x[j][0]
                 elif direction == 2:
-                    add_direction = abs(self.points_sorted_y[j][2]- center_value) < r
+                    add_direction = abs(self.projection_y[j] - center_value) < r
                     ind = self.points_sorted_y[j][0]
                 else:
                     add_direction = abs(self.projection_diag[j] - center_value) < r
