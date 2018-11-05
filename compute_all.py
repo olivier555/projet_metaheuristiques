@@ -31,9 +31,29 @@ for index, row in df.iterrows():
 print(fails)
 
 df2 = pd.DataFrame.from_dict(dic_solution, orient = 'index')
-df2 = pd.DataFrame.from_dict(dic_solution, orient = 'index')
-df2 = pd.DataFrame.from_dict(dic_solution, orient = 'index')
+df2.columns =  ['temps','valeur','capteurs','n_iterations','taille_pop']
+df2.index.name = ['name','R_com','R_capt']
 print(df2)
-name_output = 'solutions_value.csv'
+name_output = 'solutions_real_data.csv'
 df2.to_csv(name_output)
 
+
+dico = {}
+failed_grids = []
+grid_widths = [15, 20, 25, 30, 40]
+for l in grid_widths:
+	for (R_capt, R_com) in [(1,1),(1,2),(2,2),(2,3)]:
+		data = Data(r_com = 1, r_sens = 1, nb_rows = 9, nb_columns = 9)
+		try:
+			# solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept, stagnancy_max = stagnancy_max)
+			dico[(l,R_capt,R_com)] = ['temps','valeur', 'capteurs', 'n_iteration', 'taille_pop']
+		except :
+			failed_grids.append((l,R_capt,R_com))
+
+print(failed_grids)
+df3 = pd.DataFrame.from_dict(dico, orient = 'index')
+df3.columns =  ['temps','valeur','capteurs','n_iterations','taille_pop']
+df3.index.name = ['grid_width','R_com','R_capt']
+print(df3)
+name_output = 'solutions_grids.csv'
+df3.to_csv(name_output)
