@@ -9,7 +9,7 @@ import random as rd
 from search_two_to_one import SearchTwoToOne
 from local_search import remove_targets
 
-def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min = 0.4, mutation_proba_max = 0.6, prop_children_kept = 0.7, t_max = 60, stagnancy_max = 0, timings = False):
+def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min = 0.4, mutation_proba_max = 0.6, prop_children_kept = 0.7, t_max = 60, stagnancy_max = 0, timings = False, inc = True):
     """ Function for the genetic algorithm.
     parameters:
         -population: initial population
@@ -88,7 +88,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
             p = rd.random()
             if p < mutation_proba:
                 # The mutations become more important when increase_factor is big
-                if n_stagnancy > 10:
+                if n_stagnancy > 10 and inc:
                     increase_factor = min((n_stagnancy - 10), 10)
                 else:
                     increase_factor = 1
@@ -142,62 +142,3 @@ def mutation_1(s,data, switch, search_two, increase_factor = 1, p_ajout = 0.5):
 
     remove_targets(s,data)
     return s
-
-
-
-if __name__ == '__main__':
-    from data import *
-    from fusion import *
-    from initial_path_finder import PathFinder
-    from switch import Switch
-
-    data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR625_15_100.dat")
-    # data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
-    n_population = 10
-    population = []
-
-    switch = Switch(data)
-    print('creating initial population...')
-    path_finder = PathFinder(data)
-    for i in range(n_population):
-        solution = path_finder.create_path()
-        remove_targets(solution,data)
-        j = rd.randint(0, 5*int(solution.value))
-        switch.switch_sensors(solution, 5, j)
-        remove_targets(solution,data)
-        population.append(solution)
-
-    print('done!')
-    values_pop = [s.compute_value() for s in population]
-    print('minimum initial value...')
-    print(min(values_pop))
-
-    search_two = SearchTwoToOne(data)
-    def mutation(s, increase_factor):
-        return mutation_1(s, data, switch, search_two, increase_factor)
-
-    f = Fusion(data)
-    def fusion(s_1,s_2):
-        p = rd.random()
-        if p < 0.5:
-            return f.fusion_vertical_childrens(s_1,s_2)
-        else:
-            return f.fusion_horizontal_childrens(s_1,s_2)
-
-
-    [population,best_solution] = genetic(population, data, mutation, fusion, n_iter = 100, t_max  = 30)
-    
-    print(best_solution.value)
-    switch.switch_sensors(best_solution, 100, 100)
-    search_two.search(best_solution, 100, 20)
-    print(best_solution.value)
-
-    assert(best_solution.eligible(data))
-
-
-
-    from visualization import *
-    v = Visualizator(data,best_solution)
-    v.print_sensors()
-    v.print_sensors_com()
-    v.print_sensors_sens()
