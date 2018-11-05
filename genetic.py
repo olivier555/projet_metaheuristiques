@@ -36,6 +36,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
     best_sol = population[np.argmin(values_pop)]
     best = best_sol.value
     n_stagnancy = 0
+    t_best = 0.0
     while (i <= n_iter and t < t_max) or n_stagnancy < stagnancy_max:
         print("genetic iteration :", i)
         # Creation of children by fusion of solutions
@@ -79,6 +80,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
                 print('better solution after a fusion')
             best = best_actual
             n_stagnancy = 0
+            t_best = timer() - start
         else:
             n_stagnancy += 1
 
@@ -119,10 +121,11 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
     if min(values_pop) < best: #improvement in the last mutations
         best = min(values_pop)
         best_sol = population[np.argmin(values_pop)].copy()
+        t_best = timer() - start
     if timings :
         return [population,best_sol, n_fusion, n_mutation, t_f, t_m, i]
     else:
-        return[population,best_sol]
+        return [population, best_sol, t_best]
 
 
 def mutation_1(s,data, switch, search_two, increase_factor = 1, p_ajout = 0.5):

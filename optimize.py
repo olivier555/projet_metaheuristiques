@@ -62,31 +62,33 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
         else:
             return fusioner.fusion_diag_childrens(s_1, s_2)
     initial_population = create_initial_population(data, nb_population, switch)
+    t_creation = (timer() - start)
     assert(t_max - (timer() - start) > 0)
-    [population,best_solution] = genetic(population = initial_population,
-                                         data = data,
-                                         mutation = mutation,
-                                         fusion = fusion,
-                                         n_iter = nb_iter_max,
-                                         mutation_proba_min = p_mutation_min,
-                                         mutation_proba_max = p_mutation_max,
-                                         prop_children_kept = prop_children_kept,
-                                         t_max = t_max - (timer() - start),
-                                         stagnancy_max = stagnancy_max)
+    [population, best_solution, t_best] = genetic(population = initial_population,
+                                                  data = data,
+                                                  mutation = mutation,
+                                                  fusion = fusion,
+                                                  n_iter = nb_iter_max,
+                                                  mutation_proba_min = p_mutation_min,
+                                                  mutation_proba_max = p_mutation_max,
+                                                  prop_children_kept = prop_children_kept,
+                                                  t_max = t_max - (timer() - start),
+                                                  stagnancy_max = stagnancy_max)
     treat_best_solution(best_solution, data, switch, search_two)
+    t_total = t_creation + t_best
     return best_solution
 
 if __name__ == '__main__':
 
 #    data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR1500_21_500.dat")
     data = Data(r_com = 1, r_sens = 1, nb_rows = 15, nb_columns = 15)
-    nb_population = 100
+    nb_population = 30
     nb_iter_max = 10
     t_max = 90
     p_mutation_min = 0.3
     p_mutation_max = 0.6
     prop_children_kept = 0.8
-    stagnancy_max = 6
+    stagnancy_max = 20
 
     solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept, stagnancy_max = stagnancy_max)
     visualizator = Visualizator(data, solution)
