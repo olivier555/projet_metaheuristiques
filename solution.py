@@ -12,18 +12,20 @@ class Solution():
         """
         if sensors is None:
             sensors = np.zeros(n,dtype = 'bool')
+            self.sensors_index = set()
         else:
             sensors = np.array(sensors, 'bool')
             assert sensors.size == n, "size of sensors must be equal to n %s"%n
+            self.sensors_index = set(np.where(sensors)[0])
         self.sensors = sensors
-        self.value = self.compute_value()
+        self.value = sum(self.sensors == 1)
         self.n = n
 
     def compute_value(self):
         """ Compute the value of the solution.
         It's the value that we try to optimize
         """
-        return sum(self.sensors == 1)
+        return self.value
 
     def detected(self, data):
         """ Check if all targets are detected by the solution
@@ -37,7 +39,7 @@ class Solution():
     def reached(self, data):
         """Getting all the sensors that are reachable from the sink.
         """
-        index_sensors = set(np.where(self.sensors)[0])
+        index_sensors = self.get_index_sensors().copy()
         next_vertex = set(data.get_neighbours_com(0)).intersection(index_sensors)
         reached = {0}.union(next_vertex)
         if 0 in next_vertex:
@@ -161,6 +163,7 @@ class Solution():
         if not self.sensors[i]:
             self.sensors[i] = True
             self.value += 1
+            self.sensors_index.add(i)
 
     def remove_sensor(self, i):
         """ remove a sensor and update the value
@@ -168,6 +171,7 @@ class Solution():
         if self.sensors[i]:
             self.sensors[i] = False
             self.value -= 1
+            self.sensors_index.remove(i)
 
     def is_sensor(self, index):
         """ check if there is a sensor at index
@@ -177,5 +181,17 @@ class Solution():
     def get_index_sensors(self):
         """ get a list of all the sensors in the solution.
         """
-        return list(np.where(self.sensors)[0])
+        return list(self.sensors_index)
+
+if __name__ == '__main__':
+    from data import Data
+    data = Data(1,1,2,2)
+    s = Solution(4,[0,0,1,0])
+    print(s.value)
+    print(s.compute_value())
+    s.add_sensor(1)
+    print(s.sensors_index)
+    print(s.get_index_sensors())
+    s.remove_sensor(3)
+    print(s.value)
 

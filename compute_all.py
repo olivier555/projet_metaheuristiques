@@ -3,7 +3,6 @@ import numpy as np
 from data import Data
 from optimize import optimize
 
-"""
 df = pd.read_csv('Instances/bound.csv')
 print(df)
 
@@ -12,9 +11,9 @@ dic_solution =  {}
 fails = []
 for index, row in df.iterrows():
     data = Data(r_com = row['R_com'], r_sens = row['R_capt'], file_name = "Instances/" + row['instance'])
-    nb_population = 30
-    nb_iter_max = 500
-    t_max = 900 # 15 minutes
+    nb_population = 2
+    nb_iter_max = 1000
+    t_max = 300 # 5 minutes
     p_mutation_min = 0.3
     p_mutation_max = 0.6
     prop_children_kept = 0.8
@@ -36,7 +35,7 @@ df2.index.name = ['name','R_com','R_capt']
 print(df2)
 name_output = 'solutions_real_data.csv'
 df2.to_csv(name_output)
-"""
+
 
 dico = {}
 failed_grids = []
@@ -44,9 +43,9 @@ grid_widths = [10, 15, 20, 25, 30, 40]
 for l in grid_widths:
     for (R_capt, R_com) in [(1,1),(1,2),(2,2),(2,3)]:
         data = Data(r_com = R_com, r_sens = R_capt, nb_rows = l, nb_columns = l)
-        nb_population = 30
-        nb_iter_max = 500
-        t_max = 900 # 15 minutes
+        nb_population = 2
+        nb_iter_max = 1000
+        t_max = 300 # 5 minutes
         p_mutation_min = 0.3
         p_mutation_max = 0.6
         prop_children_kept = 0.8

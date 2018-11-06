@@ -82,16 +82,17 @@ if __name__ == '__main__':
 
 #    data = Data(r_com = 2, r_sens = 1, file_name = "Instances/captANOR1500_21_500.dat")
     data = Data(r_com = 1, r_sens = 1, nb_rows = 9, nb_columns = 9)
-    nb_population = 50
-    nb_iter_max = 50
-    t_max = 30
+    nb_population = 10
+    nb_iter_max = 30
+    t_max = 20
 
     p_mutation_min = 0.3
     p_mutation_max = 0.6
     prop_children_kept = 0.8
     stagnancy_max = 20
 
-    solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept, stagnancy_max = stagnancy_max)
+    solution = optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation_max, prop_children_kept, stagnancy_max = stagnancy_max)[0]
+    print(solution)
     visualizator = Visualizator(data, solution)
 
     visualizator.print_sensors()
