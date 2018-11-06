@@ -125,7 +125,7 @@ def genetic(population, data, mutation, fusion, n_iter = 50, mutation_proba_min 
     if timings :
         return [population,best_sol, n_fusion, n_mutation, t_f, t_m, i]
     else:
-        return [population, best_sol, t_best]
+        return [population, best_sol, t_best, i]
 
 
 def mutation_1(s,data, switch, search_two, increase_factor = 1, p_ajout = 0.5):

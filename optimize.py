@@ -64,7 +64,7 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
     initial_population = create_initial_population(data, nb_population, switch)
     t_creation = (timer() - start)
     assert(t_max - (timer() - start) > 0)
-    [population, best_solution, t_best] = genetic(population = initial_population,
+    [population, best_solution, t_best, nb_iter] = genetic(population = initial_population,
                                                   data = data,
                                                   mutation = mutation,
                                                   fusion = fusion,
@@ -76,7 +76,7 @@ def optimize(data, nb_population, nb_iter_max, t_max, p_mutation_min, p_mutation
                                                   stagnancy_max = stagnancy_max)
     treat_best_solution(best_solution, data, switch, search_two)
     t_total = t_creation + t_best
-    return best_solution
+    return best_solution, t_total, nb_iter
 
 if __name__ == '__main__':
 
